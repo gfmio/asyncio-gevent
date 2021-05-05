@@ -1,0 +1,10 @@
+{
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll": true,
+    "source.organizeImports": true
+  },
+  "python.pythonPath": ".venv/bin/python3.9",
+  "python.linting.enabled": true,
+  "python.formatting.provider": "black",
+}
