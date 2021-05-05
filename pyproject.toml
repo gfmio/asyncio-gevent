@@ -1,9 +1,15 @@
 [tool.poetry]
 name = "asyncio-gevent"
 version = "0.1.0"
-description = ""
+description = "asyncio & gevent in harmony"
 authors = ["Frédérique Mittelstaedt <hi@gfm.io>"]
 license = "MIT"
+readme = "README.md"
+homepage = "https://github.com/gfmio/asyncio-gevent"
+repository = "https://github.com/gfmio/asyncio-gevent"
+documentation = "https://github.com/gfmio/asyncio-gevent"
+keywords = ["asyncio", "gevent"]
+include = ["NOTICE"]
 
 [tool.poetry.dependencies]
 python = "^3.9"
