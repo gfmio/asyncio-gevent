@@ -12,7 +12,7 @@ keywords = ["asyncio", "gevent"]
 include = ["NOTICE"]
 
 [tool.poetry.dependencies]
-python = "^3.9"
+python = "^3.7"
 gevent = "*"
 
 [tool.poetry.dev-dependencies]
