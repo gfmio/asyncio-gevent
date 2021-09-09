@@ -210,6 +210,33 @@ Under the hood, this is just a thin convenience wrapper around `asyncio_gevent.g
 
 As a result, `asyncio_gevent.sync_to_async` accepts the same arguments as `asyncio_gevent.greenlet_to_future` to achieve the same behaviour.
 
+`asyncio_gevent.sync_to_async` can also be used as a decorator
+
+```py3
+# Preamble: Apply the gevent monkey patch and initialise the asyncio event loop policy
+
+import gevent.monkey
+gevent.monkey.patch_all()
+
+import asyncio
+
+import asyncio_gevent
+
+asyncio.set_event_loop_policy(asyncio_gevent.EventLoopPolicy())
+
+# Main example
+
+import gevent
+
+@asyncio_gevent.sync_to_async()
+def fn(duration: float):
+    gevent.sleep(duration)
+    return 42
+
+asyncio.run(fn(1.0))
+```
+
+
 ### Wrapping coroutines in spawning functions
 
 Use `asyncio_gevent.async_to_sync` to wrap a coroutine function or in a blocking function that spawns a greenlet and waits until the coroutine has returned.
@@ -230,7 +257,7 @@ asyncio.set_event_loop_policy(asyncio_gevent.EventLoopPolicy())
 
 import gevent
 
-def async_function(duration: float):
+async def async_function(duration: float):
     await asyncio.sleep(duration)
     return 42
 
@@ -244,6 +271,33 @@ The returned function will execute the coroutine on an existing running loop or 
 Under the hood, this is just a thin convenience wrapper around `asyncio_gevent.future_to_greenlet`.
 
 As a result, `asyncio_gevent.async_to_sync` accepts the same arguments as `asyncio_gevent.future_to_greenlet` to achieve the same behaviour.
+
+`asyncio_gevent.async_to_sync` can also be used as a decorator.
+
+
+```py3
+# Preamble: Apply the gevent monkey patch and initialise the asyncio event loop policy
+
+import gevent.monkey
+gevent.monkey.patch_all()
+
+import asyncio
+
+import asyncio_gevent
+
+asyncio.set_event_loop_policy(asyncio_gevent.EventLoopPolicy())
+
+# Main example
+
+import gevent
+
+@asyncio_gevent.async_to_sync
+async def fn(duration: float):
+    await asyncio.sleep(duration)
+    return 42
+
+fn(1)
+```
 
 ## License
 
