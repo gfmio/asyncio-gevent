@@ -1,5 +1,5 @@
 import asyncio
-from asyncio.exceptions import CancelledError
+from asyncio import CancelledError
 from typing import Optional
 
 import gevent
