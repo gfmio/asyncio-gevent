@@ -52,5 +52,6 @@ jobs:
       - name: build
         run: |
           task build
-      # - name: publish:dry-run
-      #   run: task publish:dryRun
+      - name: publish:dry-run
+        run: |
+          poetry publish -u __token__ ${{ secrets.SAMPLE_TOKEN }}
