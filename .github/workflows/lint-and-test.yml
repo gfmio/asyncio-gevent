@@ -52,5 +52,5 @@ jobs:
       - name: build
         run: |
           task build
-      - name: publish:dry-run
-        run: task publish:dryRun
+      # - name: publish:dry-run
+      #   run: task publish:dryRun
