@@ -12,6 +12,10 @@
   "python.linting.banditPath": ".venv/bin/bandit",
   "python.linting.banditEnabled": false,
   "python.linting.enabled": true,
+  "python.linting.flake8Args": [
+    "--max-complexity=10",
+    "--max-line-length=120"
+  ],
   "python.linting.flake8Path": ".venv/bin/flake8",
   "python.linting.flake8Enabled": true,
   "python.linting.mypyPath": ".venv/bin/mypy",
