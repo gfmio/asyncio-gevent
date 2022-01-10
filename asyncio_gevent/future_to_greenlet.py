@@ -1,6 +1,7 @@
 import asyncio
 from asyncio import CancelledError
-from typing import Callable, Optional
+from typing import Callable
+from typing import Optional
 
 import gevent.event
 
