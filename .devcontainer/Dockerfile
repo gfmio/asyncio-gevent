@@ -2,11 +2,12 @@
 ARG VARIANT="3.9"
 FROM mcr.microsoft.com/vscode/devcontainers/python:0-${VARIANT}
 
+# Auto-activate virtualenv
 ENV VIRTUAL_ENV=/workspaces/asyncio-gevent/.venv
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
+# Install task
 RUN sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b /usr/local/bin
-ENV PATH="/workspaces/asyncio-gevent/bin:$VIRTUAL_ENV/bin:$PATH"
 
 # [Optional] Allow the vscode user to pip install globally w/o sudo
 # ENV PIP_TARGET=/usr/local/pip-global
