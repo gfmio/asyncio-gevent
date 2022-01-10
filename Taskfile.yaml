@@ -1,6 +1,6 @@
 # https://taskfile.dev
 
-version: '3'
+version: "3"
 
 env:
   VIRTUAL_ENV:
@@ -51,7 +51,7 @@ tasks:
 
   reorder-python-imports:
     cmds:
-      - zsh -c "poetry run reorder-python-imports --separate-from-import --separate-relative asyncio_gevent/**/*.py tests/**/*.py"
+      - find asyncio_gevent tests -type f -name '*.py' -exec poetry run reorder-python-imports {} +;
 
   mypy:
     cmds:
