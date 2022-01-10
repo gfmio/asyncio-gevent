@@ -54,4 +54,4 @@ jobs:
           task build
       - name: publish:dry-run
         run: |
-          poetry publish -u __token__ ${{ secrets.SAMPLE_TOKEN }}
+          poetry publish -u __token__ -p token
