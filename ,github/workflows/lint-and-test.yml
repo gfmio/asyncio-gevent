@@ -2,9 +2,9 @@ name: Lint & Test
 
 on:
   push:
-    branches: [ $default-branch ]
+    branches: [ main ]
   pull_request:
-    branches: [ $default-branch ]
+    branches: [ main ]
   workflow_dispatch:
 
 jobs:
@@ -22,21 +22,21 @@ jobs:
         python-version: ${{ matrix.python-version }}
     - name: install-dependencies
       run: |
-        python -m venv .venv
         python -m pip intall poetry
+        python -m venv .venv
         poetry install
     - name: flake8
       run: |
-        flake8 . --count  --show-source --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+        poetry run flake8 asyncio_gevent tests --count  --show-source --exit-zero --max-complexity=10 --max-line-length=120 --statistics
     - name: black
       run: |
-        black
+        poetry run black --check --verbose asyncio_gevent tests
     - name: reorder-python-imports
       run: |
-        reorder-python-imports
+        poetry run reorder-python-imports --separate-from-import --separate-relative asyncio_gevent/**/*.py tests/**/*.py
     - name: mypy
       run: |
-        mypy .
+        poetry run mypy .
     - name: test
       run: |
-        pytest
+        poetry run pytest
