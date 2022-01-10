@@ -1,0 +1,59 @@
+name: Lint & Test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.7", "3.8", "3.9", "3.10"]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install Task
+        uses: arduino/setup-task@v1
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.cache/pip
+            ~/.cache/poetry
+          key: ${{ runner.os }}-${{ hashFiles('poetry.lock') }}
+      - name: install-dependencies
+        run: |
+          # sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b ./bin
+          python -m pip install poetry
+          python -m venv .venv
+          poetry install
+          # echo "$GITHUB_WORKSPACE/bin" >> $GITHUB_PATH
+      - name: test
+        run: |
+          task test
+      - name: flake8
+        run: |
+          task flake8
+      - name: black
+        run: |
+          task black
+      - name: reorder-python-imports
+        run: |
+          task reorder-python-imports
+      - name: mypy
+        run: |
+          task mypy
+      - name: build
+        run: |
+          task build
+      - name: publish:dry-run
+        run: |
+          task publish:dryRun

@@ -62,5 +62,5 @@ class Watcher(RefMixin, metaclass=abc.ABCMeta):
             self.callback(*self.args)
         except Exception:
             raise
-        except:
+        except:  # noqa: E722
             self.loop.handle_error(self, *sys.exc_info())

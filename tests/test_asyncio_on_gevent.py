@@ -2,13 +2,13 @@ import gevent.monkey
 
 gevent.monkey.patch_all()
 
-import asyncio
-import threading
-import time
+import asyncio  # noqa: E402
+import threading  # noqa: E402
+import time  # noqa: E402
 
-import gevent
+import gevent  # noqa: E402
 
-import asyncio_gevent
+import asyncio_gevent  # noqa: E402
 
 asyncio.set_event_loop_policy(asyncio_gevent.EventLoopPolicy())
 
@@ -89,7 +89,7 @@ def test_asyncio_on_gevent_supports_awaiting_greenlets_with_future_to_greenlet()
     greenlet.start()
     greenlet.join()
     result = greenlet.get()
-    assert result == None
+    assert result is None
 
 
 async def asyncio_on_gevent_supports_awaiting_greenlets_1():

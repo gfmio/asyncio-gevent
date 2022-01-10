@@ -1,8 +1,10 @@
 import sys
+from types import ModuleType
+from typing import Dict
 
 __all__ = ["MonkeyJail"]
 
-_sys_modules = {}
+_sys_modules: Dict[str, ModuleType] = {}
 
 
 class MonkeyJail:

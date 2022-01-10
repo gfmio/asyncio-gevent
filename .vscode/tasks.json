@@ -1,0 +1,66 @@
+{
+  // See https://go.microsoft.com/fwlink/?LinkId=733558
+  // for the documentation about the tasks.json format
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "task (test, lint & build)",
+      "type": "shell",
+      "command": "task",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    },
+    {
+      "label": "build",
+      "type": "shell",
+      "command": "task build",
+      "group": "build",
+    },
+    {
+      "label": "test",
+      "type": "shell",
+      "command": "task test",
+      "group": {
+        "kind": "test",
+        "isDefault": true
+      },
+    },
+    {
+      "label": "lint",
+      "type": "shell",
+      "command": "task lint",
+    },
+    {
+      "label": "reorder-python-imports",
+      "type": "shell",
+      "command": "task reorder-python-imports",
+    },
+    {
+      "label": "black",
+      "type": "shell",
+      "command": "task black",
+    },
+    {
+      "label": "flake8",
+      "type": "shell",
+      "command": "task flake8",
+    },
+    {
+      "label": "mypy",
+      "type": "shell",
+      "command": "task mypy",
+    },
+    {
+      "label": "install",
+      "type": "shell",
+      "command": "task install",
+    },
+    {
+      "label": "publish-dry-run",
+      "type": "shell",
+      "command": "task publish:dryRun",
+    },
+  ]
+}

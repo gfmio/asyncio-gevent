@@ -6,7 +6,7 @@ asyncio-gevent makes asyncio and gevent compatible. It provides utilities for
 - running gevent on asyncio (by using asyncio as gevent's event loop, still work in progress)
 - converting greenlets to asyncio futures
 - converting futures to asyncio greenlets
-- wrapping blocking or spawning functions in coroutines which spawn a greenlet and wait for its completion 
+- wrapping blocking or spawning functions in coroutines which spawn a greenlet and wait for its completion
 - wrapping coroutines in spawning functions which block until the future is resolved
 
 asyncio-gevent is a fork and rewrite of `aiogevent` and `tulipcore` for modern python 3.
@@ -204,7 +204,7 @@ async_function = asyncio_gevent.sync_to_async(blocking_function)
 asyncio.run(async_function(1.0))
 ```
 
-The returned corountine function will execute the original function in a spawned greenlet and await it's completion. 
+The returned corountine function will execute the original function in a spawned greenlet and await it's completion.
 
 Under the hood, this is just a thin convenience wrapper around `asyncio_gevent.greenlet_to_future`.
 

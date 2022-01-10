@@ -2,8 +2,30 @@
   "editor.formatOnSave": true,
   "editor.codeActionsOnSave": {
     "source.fixAll": true,
-    "source.organizeImports": true
+    "source.organizeImports": true,
   },
-  "python.linting.enabled": true,
+  "python.formatting.autopep8Path": ".venv/bin/autopep8",
+  "python.formatting.blackPath": ".venv/bin/black",
   "python.formatting.provider": "black",
+  "python.formatting.yapfPath": ".venv/bin/yapf",
+  "python.languageServer": "Pylance",
+  "python.linting.banditPath": ".venv/bin/bandit",
+  "python.linting.banditEnabled": false,
+  "python.linting.enabled": true,
+  "python.linting.flake8Args": [
+    "--max-complexity=10",
+    "--max-line-length=120"
+  ],
+  "python.linting.flake8Path": ".venv/bin/flake8",
+  "python.linting.flake8Enabled": true,
+  "python.linting.mypyPath": ".venv/bin/mypy",
+  "python.linting.mypyEnabled": true,
+  "python.linting.pycodestylePath": ".venv/bin/pycodestyle",
+  "python.linting.pycodestyleEnabled": false,
+  "python.linting.pydocstylePath": ".venv/bin/pydocstyle",
+  "python.linting.pydocstyleEnabled": true,
+  "python.linting.pylintEnabled": false,
+  "python.linting.pylintPath": ".venv/bin/pylint",
+  "python.pythonPath": ".venv/bin/python",
+  "terminal.integrated.defaultProfile.linux": "zsh",
 }

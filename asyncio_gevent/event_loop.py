@@ -1,6 +1,5 @@
 import asyncio
 
-import gevent
 import gevent.selectors
 
 __all__ = ["EventLoop"]
