@@ -2,7 +2,7 @@ import gevent
 
 gevent.config.loop = "asyncio_gevent.gevent_loop.GeventLoop"
 
-import gevent.monkey
+import gevent.monkey  # noqa: E402
 
 gevent.monkey.patch_all(
     socket=False,
@@ -22,11 +22,11 @@ gevent.monkey.patch_all(
     contextvars=True,
 )
 
-import asyncio
-import threading
-import time
+import asyncio  # noqa: E402
+import threading  # noqa: E402
+import time  # noqa: E402
 
-import asyncio_gevent
+import asyncio_gevent  # noqa: E402
 
 # test_asyncio_on_gevent_will_run_in_dummy_thread
 
@@ -104,7 +104,7 @@ def test_asyncio_on_gevent_supports_awaiting_greenlets_with_future_to_greenlet()
     greenlet.start()
     greenlet.join()
     result = greenlet.get()
-    assert result == None
+    assert result is None
 
 
 async def asyncio_on_gevent_supports_awaiting_greenlets_1():

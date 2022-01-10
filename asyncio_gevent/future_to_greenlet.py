@@ -1,6 +1,6 @@
 import asyncio
 from asyncio import CancelledError
-from typing import Optional
+from typing import Callable, Optional
 
 import gevent.event
 
@@ -41,56 +41,19 @@ def future_to_greenlet(
     instead.
     """
 
-    def run():
-        active_loop = loop
+    def on_cancelled():
+        if autokill_greenlet:
+            greenlet.kill()
+        else:
+            raise
 
-        # If not loop argument was specified, try and use the running loop
-
-        if not active_loop:
-            try:
-                active_loop = asyncio.get_running_loop()
-            except RuntimeError:
-                pass
-
-        ensured_future = None
-
-        try:
-            if not autostart_future:
-                ensured_future = future
-            elif not active_loop:
-                # If there's no running loop and no loop argument was specified, get a loop and run it to completion in a spawned greenlet
-
-                active_loop = asyncio.new_event_loop()
-                asyncio.set_event_loop(active_loop)
-
-                ensured_future = asyncio.ensure_future(future, loop=active_loop)
-
-                run_until_complete_greenlet = gevent.spawn(
-                    active_loop.run_until_complete, ensured_future
-                )
-                run_until_complete_greenlet.join()
-            else:
-                # If there's a running loop already or a loop argument was specified, then schedule the future and block until it's done
-
-                ensured_future = asyncio.ensure_future(future, loop=active_loop)
-
-                event = gevent.event.Event()
-
-                def done(_):
-                    event.set()
-
-                ensured_future.add_done_callback(done)
-
-                event.wait()
-
-            return ensured_future.result()
-        except CancelledError:
-            if autokill_greenlet:
-                greenlet.kill()
-            else:
-                raise
-
-    greenlet = gevent.Greenlet(run=run)
+    greenlet = gevent.Greenlet(
+        run=_run,
+        future=future,
+        loop=loop,
+        autostart_future=autostart_future,
+        on_cancelled=on_cancelled,
+    )
 
     def cb(gt):
         if isinstance(gt.value, gevent.GreenletExit):
@@ -100,3 +63,57 @@ def future_to_greenlet(
         greenlet.link_value(cb)
 
     return greenlet
+
+
+def _run(
+    future: asyncio.Future,
+    loop: Optional[asyncio.AbstractEventLoop],
+    autostart_future: bool,
+    on_cancelled: Callable,
+):
+    active_loop = loop
+
+    # If not loop argument was specified, try and use the running loop
+
+    if not active_loop:
+        try:
+            active_loop = asyncio.get_running_loop()
+        except RuntimeError:
+            pass
+
+    try:
+        ensured_future: asyncio.Future
+
+        if not autostart_future:
+            ensured_future = future
+        elif not active_loop:
+            # If there's no running loop and no loop argument was specified,
+            # then get a loop and run it to completion in a spawned greenlet
+
+            active_loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(active_loop)
+
+            ensured_future = asyncio.ensure_future(future, loop=active_loop)
+
+            run_until_complete_greenlet = gevent.spawn(
+                active_loop.run_until_complete, ensured_future
+            )
+            run_until_complete_greenlet.join()
+        else:
+            # If there's a running loop already or a loop argument was specified,
+            # then schedule the future and block until it's done
+
+            ensured_future = asyncio.ensure_future(future, loop=active_loop)
+
+            event = gevent.event.Event()
+
+            def done(_):
+                event.set()
+
+            ensured_future.add_done_callback(done)
+
+            event.wait()
+
+        return ensured_future.result()
+    except CancelledError:
+        on_cancelled()

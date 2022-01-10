@@ -1,5 +1,4 @@
-from typing import Callable
-from typing import Optional
+from typing import Callable, Optional
 
 import gevent
 
@@ -13,7 +12,10 @@ def sync_to_async(
     autokill_greenlet: bool = True,
 ) -> Callable:
     """
-    Wrap the blocking function `fn` (that may spawn greenlets) in a coroutine function that spawns a greenlet to execute `fn` and returns when the greenlet is dead
+    Convert a synchronous/blocking function to an asynchronous one.
+
+    This wraps the blocking function `fn` (that may spawn greenlets) in a coroutine function that spawns a greenlet to
+    execute `fn` and returns when the greenlet is dead.
     """
     if fn is None:
 

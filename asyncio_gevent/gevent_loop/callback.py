@@ -35,7 +35,7 @@ class Callback(RefMixin):
             callback(*args)
         except Exception:
             raise
-        except:
+        except:  # noqa: E722
             self.loop.handle_error(self, *sys.exc_info())
         finally:
             self._decrease_ref()

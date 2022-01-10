@@ -1,7 +1,5 @@
-import asyncio
 import sys
 import time
-from threading import Thread
 
 from gevent._interfaces import ILoop
 from zope.interface import implementer
@@ -240,7 +238,7 @@ class GeventLoop:
     def _handle_aio_error(self, loop, context):
         try:
             self.handle_error(context, *sys.exc_info())
-        except:
+        except:  # noqa: E722
             # hmm, test__pool will fail if we let the error propagate - it will
             # stop the main loop unexpectedly
             pass
