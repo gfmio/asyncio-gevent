@@ -35,11 +35,11 @@ tasks:
 
   publish:
     cmds:
-      - poetry publish
+      - poetry publish -u __token__
 
   publish:dryRun:
     cmds:
-      - poetry publish --dry-run
+      - poetry publish --dry-run -u __token__ -p token
 
   flake8:
     cmds:
