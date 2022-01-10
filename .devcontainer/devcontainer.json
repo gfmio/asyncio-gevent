@@ -17,7 +17,8 @@
   // Add the IDs of extensions you want installed when the container is created.
   "extensions": [
     "ms-python.python",
-    "ms-python.vscode-pylance"
+    "ms-python.vscode-pylance",
+    "editorconfig.editorconfig"
   ],
   // Use 'postCreateCommand' to run commands after the container is created.
   "postCreateCommand": "task devcontainer:postCreateCommand",
