@@ -43,6 +43,7 @@ jobs:
       - name: reorder-python-imports
         run: |
           task reorder-python-imports
+        shell: zsh
       - name: mypy
         run: |
           task mypy
