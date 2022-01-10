@@ -16,6 +16,8 @@ jobs:
         python-version: ["3.8", "3.9", "3.10"]
     steps:
       - uses: actions/checkout@v2
+      - name: Install Task
+        uses: arduino/setup-task@v1
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v2
         with:
@@ -29,11 +31,11 @@ jobs:
           key: ${{ runner.os }}-${{ hashFiles('poetry.lock') }}
       - name: install-dependencies
         run: |
-          sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b ./bin
+          # sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b ./bin
           python -m pip install poetry
           python -m venv .venv
           poetry install
-          echo "$GITHUB_WORKSPACE/bin" >> $GITHUB_PATH
+          # echo "$GITHUB_WORKSPACE/bin" >> $GITHUB_PATH
       - name: test
         run: |
           task test
