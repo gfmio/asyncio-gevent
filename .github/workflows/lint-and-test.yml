@@ -7,9 +7,6 @@ on:
     branches: [main]
   workflow_dispatch:
 
-env:
-  PATH: ${{ "env.GITHUB_WORKSPACE/bin:env.PATH" }}
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -29,6 +26,7 @@ jobs:
           python -m pip install poetry
           python -m venv .venv
           poetry install
+          echo "$GITHUB_WORKSPACE/bin" >> $GITHUB_PATH
       - name: flake8
         run: |
           task flake8
