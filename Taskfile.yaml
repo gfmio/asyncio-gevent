@@ -12,6 +12,7 @@ tasks:
   default:
     cmds:
       - task: test
+      - task: lint
   silent: true
 
   install:
