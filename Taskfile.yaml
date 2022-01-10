@@ -13,6 +13,7 @@ tasks:
     cmds:
       - task: test
       - task: lint
+      - task: build
   silent: true
 
   install:
