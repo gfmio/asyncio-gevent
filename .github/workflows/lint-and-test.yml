@@ -2,10 +2,13 @@ name: Lint & Test
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
   workflow_dispatch:
+
+env:
+  PATH: ${{ "env.GITHUB_WORKSPACE/bin:env.PATH" }}
 
 jobs:
   build:
@@ -15,35 +18,34 @@ jobs:
       matrix:
         python-version: ["3.8", "3.9", "3.10"]
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v2
-      with:
-        python-version: ${{ matrix.python-version }}
-    - name: install-dependencies
-      run: |
-        sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b ./bin
-        python -m pip install poetry
-        python -m venv .venv
-        poetry install
-    - name: flake8
-      run: |
-        task flake8
-    - name: black
-      run: |
-        task black
-    - name: reorder-python-imports
-      run: |
-        task reorder-python-imports
-    - name: mypy
-      run: |
-        task mypy
-    - name: test
-      run: |
-        task test
-    - name: build
-      run: |
-        task build
-    - name: publish:dry-run
-      run: 
-        task publish:dryRun
+      - uses: actions/checkout@v2
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: install-dependencies
+        run: |
+          sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b ./bin
+          python -m pip install poetry
+          python -m venv .venv
+          poetry install
+      - name: flake8
+        run: |
+          task flake8
+      - name: black
+        run: |
+          task black
+      - name: reorder-python-imports
+        run: |
+          task reorder-python-imports
+      - name: mypy
+        run: |
+          task mypy
+      - name: test
+        run: |
+          task test
+      - name: build
+        run: |
+          task build
+      - name: publish:dry-run
+        run: task publish:dryRun
