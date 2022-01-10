@@ -1,0 +1,65 @@
+# https://taskfile.dev
+
+version: '3'
+
+env:
+  VIRTUAL_ENV:
+    sh: echo `pwd`"/.venv"
+  PATH:
+    sh: echo `pwd`"/.venv/bin:$PATH"
+
+tasks:
+  default:
+    cmds:
+      - task: test
+  silent: true
+
+  install:
+    cmds:
+      - poetry install
+
+  test:
+    cmds:
+      - poetry run pytest --cov=asyncio_gevent
+
+  lint:
+    cmds:
+      - task: reorder-python-imports
+      - task: black
+      - task: flake8
+      - task: mypy
+
+  build:
+    cmds:
+      - poetry build
+
+  publish:
+    cmds:
+      - poetry publish
+
+  publish:dryRun:
+    cmds:
+      - poetry publish --dry-run
+
+  flake8:
+    cmds:
+      - poetry run flake8 asyncio_gevent tests --count  --show-source --exit-zero --max-complexity=10 --max-line-length=120 --statistics
+
+  black:
+    cmds:
+      - poetry run black --check --verbose asyncio_gevent tests
+
+  reorder-python-imports:
+    cmds:
+      - zsh -c "poetry run reorder-python-imports --separate-from-import --separate-relative asyncio_gevent/**/*.py tests/**/*.py"
+
+  mypy:
+    cmds:
+      - poetry run mypy .
+
+  devcontainer:postCreateCommand:
+    cmds:
+      - python -m venv .venv
+      - source .venv/bin/activate
+      - pip install poetry
+      - task: install
