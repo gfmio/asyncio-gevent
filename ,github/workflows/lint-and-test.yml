@@ -22,21 +22,28 @@ jobs:
         python-version: ${{ matrix.python-version }}
     - name: install-dependencies
       run: |
+        sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b ./bin
         python -m pip intall poetry
         python -m venv .venv
         poetry install
     - name: flake8
       run: |
-        poetry run flake8 asyncio_gevent tests --count  --show-source --exit-zero --max-complexity=10 --max-line-length=120 --statistics
+        task flake8
     - name: black
       run: |
-        poetry run black --check --verbose asyncio_gevent tests
+        task black
     - name: reorder-python-imports
       run: |
-        poetry run reorder-python-imports --separate-from-import --separate-relative asyncio_gevent/**/*.py tests/**/*.py
+        task reorder-python-imports
     - name: mypy
       run: |
-        poetry run mypy .
+        task mypy
     - name: test
       run: |
-        poetry run pytest
+        task test
+    - name: build
+      run: |
+        task build
+    - name: publish:dry-run
+      run: 
+        task publish:dryRun
