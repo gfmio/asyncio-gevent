@@ -1,8 +1,8 @@
 import asyncio
+
 from asyncio import CancelledError
 from typing import Optional
 
-import gevent
 import gevent.event
 
 __all__ = ["future_to_greenlet"]
