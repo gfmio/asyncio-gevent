@@ -1,7 +1,6 @@
 import asyncio
 import sys
 import time
-
 from threading import Thread
 
 from gevent._interfaces import ILoop
