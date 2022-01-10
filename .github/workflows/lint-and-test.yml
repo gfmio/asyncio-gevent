@@ -34,6 +34,9 @@ jobs:
           python -m venv .venv
           poetry install
           echo "$GITHUB_WORKSPACE/bin" >> $GITHUB_PATH
+      - name: test
+        run: |
+          task test
       - name: flake8
         run: |
           task flake8
@@ -46,9 +49,6 @@ jobs:
       - name: mypy
         run: |
           task mypy
-      - name: test
-        run: |
-          task test
       - name: build
         run: |
           task build
