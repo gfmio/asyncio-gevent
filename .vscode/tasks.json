@@ -4,10 +4,24 @@
   "version": "2.0.0",
   "tasks": [
     {
+      "label": "task (test, lint & build)",
+      "type": "shell",
+      "command": "task",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    },
+    {
+      "label": "build",
+      "type": "shell",
+      "command": "task build",
+      "group": "build",
+    },
+    {
       "label": "test",
       "type": "shell",
       "command": "task test",
-      "problemMatcher": [],
       "group": {
         "kind": "test",
         "isDefault": true
@@ -19,14 +33,34 @@
       "command": "task lint",
     },
     {
-      "label": "build",
+      "label": "reorder-python-imports",
       "type": "shell",
-      "command": "task build",
-      "problemMatcher": [],
-      "group": {
-        "kind": "build",
-        "isDefault": true
-      }
+      "command": "task reorder-python-imports",
+    },
+    {
+      "label": "black",
+      "type": "shell",
+      "command": "task black",
+    },
+    {
+      "label": "flake8",
+      "type": "shell",
+      "command": "task flake8",
+    },
+    {
+      "label": "mypy",
+      "type": "shell",
+      "command": "task mypy",
+    },
+    {
+      "label": "install",
+      "type": "shell",
+      "command": "task install",
+    },
+    {
+      "label": "publish-dry-run",
+      "type": "shell",
+      "command": "task publish:dryRun",
     },
   ]
 }
