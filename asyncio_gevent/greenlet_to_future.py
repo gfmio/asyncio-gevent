@@ -28,7 +28,7 @@ async def _await_greenlet(
     if not greenlet and autostart_greenlet:
         greenlet.start()
 
-    future = asyncio.Future()
+    future: asyncio.Future = asyncio.Future()
 
     # If the greenlet is dead, set the result
 
@@ -82,6 +82,8 @@ def greenlet_to_future(
     `autokill_greenlet=False` as an argument to `greenlet_to_future`.
     """
 
-    return _await_greenlet(
-        greenlet, autocancel_future, autostart_greenlet, autokill_greenlet
+    return asyncio.ensure_future(
+        _await_greenlet(
+            greenlet, autocancel_future, autostart_greenlet, autokill_greenlet
+        )
     )
