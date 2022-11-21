@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "asyncio-gevent"
-version = "0.2.1"
+version = "0.2.2"
 description = "asyncio & gevent in harmony"
 authors = ["Frédérique Mittelstaedt <hi@gfm.io>"]
 license = "MIT"
