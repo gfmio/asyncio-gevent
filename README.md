@@ -299,6 +299,113 @@ async def fn(duration: float):
 fn(1)
 ```
 
+## Known limitations
+
+### gevent.sleep
+
+`gevent.sleep` will pause the current greenlet. As a result, this will, by default, result in the greenlet powering the asyncio loop to be put to sleep, so nothing will execute.
+
+This is typically not intended.
+
+The solution to this problem is to wrap any code that calls `gevent.sleep` in `asyncio.sync_to_async` or (equivalently) `asyncio_gevent.greenlet_to_future(gevent.spawn(f))`. This causes the function to be executed in another greenlet which prevents the main greenlet from getting blocked.
+
+Example:
+
+```py
+import gevent.monkey
+
+gevent.monkey.patch_all()
+
+import asyncio
+import threading
+
+import gevent
+
+import asyncio_gevent
+
+asyncio.set_event_loop_policy(asyncio_gevent.EventLoopPolicy())
+
+
+async def f():
+    print("f", 1)
+    await asyncio.sleep(1)
+    print("f", 2)
+
+
+def g():
+    print("g", 1)
+    gevent.sleep(2)
+    print("g", 2)
+
+
+async def main():
+    await asyncio.gather(f(), asyncio_gevent.sync_to_async(g)())
+    # OR equivalently
+    # await asyncio.gather(f(), asyncio_gevent.greenlet_to_future(gevent.spawn(g)))
+
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+
+The output will be (as expected):
+
+```txt
+g 1
+f 1
+f 2
+g 2
+```
+
+If `gevent.sleep` is called inside an async function, then the async function needs to first be wrapped in `asyncio.async_to_sync`.
+
+```py
+import gevent.monkey
+
+gevent.monkey.patch_all()
+
+import asyncio
+
+import gevent
+
+import asyncio_gevent
+
+asyncio.set_event_loop_policy(asyncio_gevent.EventLoopPolicy())
+
+
+async def f():
+    print("f", 1)
+    await asyncio.sleep(1)
+    print("f", 2)
+
+
+async def g():
+    print("g", 1)
+    await asyncio.sleep(1)
+    gevent.sleep(1)
+    print("g", 2)
+
+
+async def main():
+    await asyncio.gather(
+        f(), asyncio_gevent.sync_to_async(asyncio_gevent.async_to_sync(g))()
+    )
+
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+
+The output will again be (as expected):
+
+```txt
+g 1
+f 1
+f 2
+g 2
+```
+
+
 ## License
 
 [MIT](LICENSE)
