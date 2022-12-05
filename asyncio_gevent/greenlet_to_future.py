@@ -44,7 +44,13 @@ async def _await_greenlet(
         greenlet.join()
 
     try:
-        return await future
+        loop = asyncio.get_running_loop()
+
+        result, _ = await asyncio.gather(
+            future, loop.run_in_executor(None, greenlet.join)
+        )
+
+        return result
     except asyncio.CancelledError:
         if autokill_greenlet:
             greenlet.kill()
