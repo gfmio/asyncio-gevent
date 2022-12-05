@@ -41,8 +41,6 @@ async def _await_greenlet(
 
         greenlet.link(cb)
 
-        greenlet.join()
-
     try:
         loop = asyncio.get_running_loop()
 
