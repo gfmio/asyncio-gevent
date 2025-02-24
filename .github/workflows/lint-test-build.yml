@@ -19,6 +19,8 @@ jobs:
     concurrency:
       group: ${{ github.workflow }}-${{ github.event }}-${{ github.ref }}-${{ github.job }}-${{ matrix.python-version }}
       cancel-in-progress: true
+    environment:
+      name: "testpypi"
     timeout-minutes: 2
     runs-on: ubuntu-latest
     strategy:
