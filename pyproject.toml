@@ -56,7 +56,7 @@ build-backend = "pdm.backend"
 ignore_missing_imports = true
 
 [tool.pyright]
-
+ignore = ["**/build/**", "**/dist/**", "**/.venv/**"]
 # [tool.poetry.dependencies]
 # python = "^3.7"
 # gevent = [
