@@ -21,12 +21,15 @@ jobs:
       cancel-in-progress: true
     environment:
       name: "testpypi"
+    permissions:
+      # IMPORTANT: this permission is mandatory for Trusted Publishing
+      id-token: write
     timeout-minutes: 2
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.7", "3.8", "3.9", "3.10", "3.11", "3.12", "3.13"]
+        python-version: ["3.7.17", "3.8", "3.9", "3.10", "3.11", "3.12", "3.13"]
     env:
       UV_PYTHON: ${{ matrix.python-version }}
       # UV_CACHE_DIR: /tmp/.cache/uv
@@ -82,9 +85,13 @@ jobs:
         run: |
           task build
       # Publish dry run
-      - name: publish-dry-run
-        run: |
-          task publish:dry-run
+      - name: Publish package distributions to TestPyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          repository-url: https://test.pypi.org/legacy/
+      # - name: publish-dry-run
+      #   run: |
+      #     task publish:dry-run
       # # Prune uv cache
       # - name: Prune uv cache
       #   run: uv cache prune --ci
