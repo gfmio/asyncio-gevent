@@ -141,4 +141,3 @@ tasks:
   devcontainer:postCreateCommand:
     cmds:
       - task: install
-      - source .venv/bin/activate
