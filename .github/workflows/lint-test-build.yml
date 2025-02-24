@@ -84,7 +84,7 @@ jobs:
       # Publish dry run
       - name: publish-dry-run
         run: |
-          task publish:dryRun
+          task publish:dry-run
       # # Prune uv cache
       # - name: Prune uv cache
       #   run: uv cache prune --ci

@@ -72,9 +72,9 @@ tasks:
     cmds:
       - uv publish -u __token__
 
-  publish:dryRun:
+  publish:dry-run:
     cmds:
-      - uv publish --dry-run -u __token__ -p token
+      - uv publish --index https://test.pypi.org/simple
 
   typecheck:
     cmds:
