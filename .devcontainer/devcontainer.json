@@ -26,7 +26,8 @@
         "ms-python.vscode-pylance",
         "editorconfig.editorconfig",
         "charliermarsh.ruff",
-        "task.vscode-task"
+        "task.vscode-task",
+        "github.vscode-github-actions"
       ],
       "settings": {}
     }
