@@ -1,3 +1,4 @@
+#!schema: https://json.schemastore.org/pyproject.json
 [project]
 name = "asyncio-gevent"
 version = "0.2.3"
@@ -74,7 +75,9 @@ ignore = ["**/build/**", "**/dist/**", "**/.venv/**"]
 name = "testpypi"
 url = "https://test.pypi.org/simple"
 explicit = true
+publish-url = "https://test.pypi.org/legacy"
 
 [[tool.uv.index]]
 name = "pypi"
 url = "https://pypi.org/simple"
+publish-url = "https://upload.pypi.org/legacy/"
