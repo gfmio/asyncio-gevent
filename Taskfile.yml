@@ -111,28 +111,28 @@ tasks:
   # ruff
 
   ruff:check:
-    cmd: ruff check
+    cmd: uv run ruff check
 
   ruff:check:watch:
-    cmd: ruff check --watch
+    cmd: uv run ruff check --watch
 
   ruff:check:fix:
-    cmd: ruff check --fix
+    cmd: uv run ruff check --fix
 
   ruff:check:fix:watch:
-    cmd: ruff check --fix --watch
+    cmd: uv run ruff check --fix --watch
 
   ruff:check:fix:unsafe:
-    cmd: ruff check --fix --unsafe-fixes
+    cmd: uv run ruff check --fix --unsafe-fixes
 
   ruff:check:fix:unsafe:watch:
-    cmd: ruff check --fix --unsafe-fixes --watch
+    cmd: uv run ruff check --fix --unsafe-fixes --watch
 
   ruff:format:
-    cmd: ruff format
+    cmd: uv run ruff format
 
   ruff:format:check:
-    cmd: ruff format --check
+    cmd: uv run ruff format --check
 
   #
   # devcontainer commands
