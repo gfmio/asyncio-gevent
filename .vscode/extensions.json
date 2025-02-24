@@ -1,0 +1,11 @@
+{
+  "recommendations": [
+    "ms-python.python",
+    "ms-python.debugpy",
+    "ms-python.vscode-pylance",
+    "editorconfig.editorconfig",
+    "charliermarsh.ruff",
+    "task.vscode-task"
+  ],
+  "unwantedRecommendations": []
+}
