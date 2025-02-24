@@ -20,7 +20,7 @@ jobs:
       group: ${{ github.workflow }}-${{ github.event }}-${{ github.ref }}-${{ github.job }}-${{ matrix.python-version }}
       cancel-in-progress: true
     timeout-minutes: 2
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04 # The Python 3.7 build is only available on Ubuntu 22.04
     strategy:
       fail-fast: false
       matrix:
