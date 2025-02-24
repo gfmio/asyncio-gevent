@@ -74,7 +74,7 @@ tasks:
 
   publish:dry-run:
     cmds:
-      - uv publish --index https://test.pypi.org/simple
+      - uv publish --index testpypi --offline
 
   typecheck:
     cmds:
