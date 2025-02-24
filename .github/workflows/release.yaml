@@ -11,7 +11,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.10"]
+        python-version: ["3.10", "3.12", "3.13"]
     steps:
       - uses: actions/checkout@v2
       - name: Install Task
@@ -30,13 +30,13 @@ jobs:
       - name: install-dependencies
         run: |
           # sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b ./bin
-          python -m pip install poetry
+          python -m pip install uv
           python -m venv .venv
-          poetry install
+          uv install
           # echo "$GITHUB_WORKSPACE/bin" >> $GITHUB_PATH
       - name: build
         run: |
           task build
       - name: publish
         run: |
-          poetry publish -u __token__ -p ${{ secrets.PYPI_TOKEN }}
+          uv publish -u __token__ -p ${{ secrets.PYPI_TOKEN }}

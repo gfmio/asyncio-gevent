@@ -28,4 +28,8 @@
   "python.linting.pylintPath": ".venv/bin/pylint",
   "python.pythonPath": ".venv/bin/python",
   "terminal.integrated.defaultProfile.linux": "zsh",
+  "python.linting.ruffPath": ".venv/bin/ruff",
+  "python.linting.ruffEnabled": true,
+  "python.linting.pyrightPath": ".venv/bin/pyright",
+  "python.linting.pyrightEnabled": true
 }

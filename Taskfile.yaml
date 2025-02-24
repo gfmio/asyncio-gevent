@@ -18,50 +18,40 @@ tasks:
 
   install:
     cmds:
-      - poetry install
+      - uv install
 
   test:
     cmds:
-      - poetry run pytest --cov=asyncio_gevent
+      - uv run pytest --cov=asyncio_gevent
 
   lint:
     cmds:
-      - task: reorder-python-imports
-      - task: black
-      - task: flake8
-      - task: mypy
+      - task: ruff
+      - task: pyright
 
   build:
     cmds:
-      - poetry build
+      - uv build
 
   publish:
     cmds:
-      - poetry publish -u __token__
+      - uv publish -u __token__
 
   publish:dryRun:
     cmds:
-      - poetry publish --dry-run -u __token__ -p token
+      - uv publish --dry-run -u __token__ -p token
 
-  flake8:
+  ruff:
     cmds:
-      - poetry run flake8 asyncio_gevent tests --count  --show-source --exit-zero --max-complexity=10 --max-line-length=120 --statistics
+      - uv run ruff asyncio_gevent tests --fix
 
-  black:
+  pyright:
     cmds:
-      - poetry run black --check --verbose asyncio_gevent tests
-
-  reorder-python-imports:
-    cmds:
-      - find asyncio_gevent tests -type f -name '*.py' -exec poetry run reorder-python-imports {} +;
-
-  mypy:
-    cmds:
-      - poetry run mypy .
+      - uv run pyright .
 
   devcontainer:postCreateCommand:
     cmds:
       - python -m venv .venv
       - source .venv/bin/activate
-      - pip install poetry
+      - pip install uv
       - task: install

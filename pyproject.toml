@@ -28,9 +28,50 @@ pytest = "^7.2.0"
 pytest-cov = "^4.0.0"
 reorder-python-imports = "^3.9.0"
 
+
+[tool.pdm.build]
+includes = ["NOTICE"]
 [build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
 
 [tool.mypy]
 ignore_missing_imports = true
+
+[project]
+authors = [
+    {name = "Frédérique Mittelstaedt", email = "hi@gfm.io"},
+]
+license = {text = "MIT"}
+requires-python = "<4.0,>=3.7"
+dependencies = [
+    "gevent; python_version < \"3.10\" and python_version >= \"3.7\"",
+    "gevent<22.0.0,>=21.12.0; python_version >= \"3.10\" and python_version < \"3.11\"",
+    "gevent<23.0.0,>=22.10.2; python_version ~= \"3.11\"",
+]
+name = "asyncio-gevent"
+version = "0.2.3"
+description = "asyncio & gevent in harmony"
+readme = "README.md"
+keywords = [
+    "asyncio",
+    "gevent",
+]
+
+[project.urls]
+homepage = "https://github.com/gfmio/asyncio-gevent"
+repository = "https://github.com/gfmio/asyncio-gevent"
+documentation = "https://github.com/gfmio/asyncio-gevent"
+
+[dependency-groups]
+dev = [
+    "black<23.0.0,>=22.10.0",
+    "flake8<6.0.0,>=5.0.4",
+    "mypy<1.0,>=0.991",
+    "pydocstyle<7.0.0,>=6.1.1",
+    "pyright>=1.1.394",
+    "pytest<8.0.0,>=7.2.0",
+    "pytest-cov<5.0.0,>=4.0.0",
+    "reorder-python-imports<4.0.0,>=3.9.0",
+    "ruff>=0.9.7",
+]
