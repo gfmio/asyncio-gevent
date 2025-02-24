@@ -68,14 +68,6 @@ tasks:
     cmds:
       - task: ruff:format
 
-  publish:
-    cmds:
-      - uv publish -u __token__
-
-  publish:dry-run:
-    cmds:
-      - uv publish --trusted-publishing always --index testpypi --offline
-
   typecheck:
     cmds:
       - task: pyright
