@@ -1,0 +1,144 @@
+# https://taskfile.dev
+
+version: "3"
+
+env:
+  VIRTUAL_ENV:
+    sh: echo `pwd`"/.venv"
+  PATH:
+    sh: echo `pwd`"/.venv/bin:$PATH"
+
+tasks:
+  default:
+    cmd: task --list-all
+      # - task: test
+      # - task: lint
+      # - task: build
+  silent: true
+
+  install:
+    cmds:
+      - uv sync --frozen
+
+  dev:
+    deps:
+      - task: test:watch
+      - task: fix:watch
+      - task: typecheck:watch
+
+  build:
+    cmds:
+      - uv build
+
+  test:
+    cmds:
+      - uv run pytest --cov=asyncio_gevent
+
+  test:watch:
+    cmds:
+      - uv run ptw --now --cov=asyncio_gevent .
+
+  lint:
+    cmds:
+      - task: ruff:check
+      - task: ruff:format:check
+
+  lint:watch:
+    deps:
+      - task: ruff:check:watch
+
+  fix:
+    cmds:
+      - task: ruff:check:fix
+
+  fix:watch:
+    cmds:
+      - task: ruff:check:fix:watch
+
+  fix:unsafe:
+    cmds:
+      - task: ruff:check:fix:unsafe
+
+  fix:unsafe:watch:
+    cmds:
+      - task: ruff:check:fix:unsafe:watch
+
+  format:
+    aliases: ["fmt"]
+    cmds:
+      - task: ruff:format
+
+  publish:
+    cmds:
+      - uv publish -u __token__
+
+  publish:dryRun:
+    cmds:
+      - uv publish --dry-run -u __token__ -p token
+
+  typecheck:
+    cmds:
+      - task: pyright
+
+  typecheck:watch:
+    cmds:
+      - task: pyright:watch
+
+  #
+  # Tools
+  #
+
+  # pyright
+
+  pyright:
+    cmds:
+      - uv run pyright .
+
+  pyright:watch:
+    cmds:
+      - uv run pyright --watch .
+
+  # pytest
+
+  pytest:
+    cmds:
+      - uv run pytest --cov=asyncio_gevent
+
+  pytest:watch:
+    cmds:
+      - uv run ptw --now --cov=asyncio_gevent .
+
+  # ruff
+
+  ruff:check:
+    cmd: ruff check
+
+  ruff:check:watch:
+    cmd: ruff check --watch
+
+  ruff:check:fix:
+    cmd: ruff check --fix
+
+  ruff:check:fix:watch:
+    cmd: ruff check --fix --watch
+
+  ruff:check:fix:unsafe:
+    cmd: ruff check --fix --unsafe-fixes
+
+  ruff:check:fix:unsafe:watch:
+    cmd: ruff check --fix --unsafe-fixes --watch
+
+  ruff:format:
+    cmd: ruff format
+
+  ruff:format:check:
+    cmd: ruff format --check
+
+  #
+  # devcontainer commands
+  #
+
+  devcontainer:postCreateCommand:
+    cmds:
+      - task: install
+      - source .venv/bin/activate
