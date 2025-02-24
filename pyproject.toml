@@ -16,16 +16,44 @@ classifiers = [
   "Programming Language :: Python :: 3.9",
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
   "Programming Language :: Python :: Implementation :: CPython",
   "Programming Language :: Python :: Implementation :: PyPy",
   "Topic :: Software Development :: Libraries",
   "Topic :: Software Development :: Libraries :: Python Modules",
 ]
 requires-python = "<4.0,>=3.7"
+
 dependencies = [
-  "gevent; python_version < \"3.10\" and python_version >= \"3.7\"",
-  "gevent<22.0.0,>=21.12.0; python_version >= \"3.10\" and python_version < \"3.11\"",
-  "gevent<23.0.0,>=22.10.2; python_version ~= \"3.11\"",
+  # Python 3.7 is supported from version 1.3 and support was dropped with version 22.10.0
+  "gevent<22.10.0,>=1.3; python_version >= \"3.7\" and python_version < \"3.8\"",
+  # Python 3.8 is supported from version 1.5 and support was dropped with version 24.10.1
+  "gevent<24.10.1,>=1.5; python_version >= \"3.8\" and python_version < \"3.9\"",
+  # Python 3.9 is supported from version 20.6.0 onwards
+  "gevent>=20.6.0; python_version >= \"3.9\" and python_version < \"3.10\"",
+  # Python 3.10 is supported from version 21.8.0 onwards
+  "gevent>=21.8.0; python_version >= \"3.10\" and python_version < \"3.11\"",
+  # Python 3.11 is supported from version 22.08.0 onwards
+  "gevent>=22.08.0; python_version >= \"3.11\" and python_version < \"3.12\"",
+  # Python 3.12 is supported from version 23.7.0 onwards
+  "gevent>=23.7.0; python_version >= \"3.12\" and python_version < \"3.13\"",
+  # Python 3.13 is supported from version 24.10.1 onwards
+  "gevent>=24.10.1; python_version >= \"3.13\"",
+
+  # greenlet is a dependency of gevent
+  # Python 3.7 is supported from version 0.4.13 until 3.1.0
+  "greenlet<=3.1.0,>=0.4.13; python_version >= \"3.7\" and python_version < \"3.8\"",
+  # Python 3.8 is supported from version 0.4.13 until 3.1.0
+  "greenlet<=3.1.0,>=0.4.13; python_version >= \"3.8\" and python_version < \"3.9\"",
+  # Python 3.9 is supported from version 0.4.16 onwards
+  "greenlet>=0.4.16; python_version >= \"3.9\" and python_version < \"3.10\"",
+  # Python 3.10 is supported from version 1.1.0 onwards
+  "greenlet>=1.1.0; python_version >= \"3.10\" and python_version < \"3.11\"",
+  # Python 3.11 is supported from version 1.1.3 onwards
+  "greenlet>=1.1.3; python_version >= \"3.11\" and python_version < \"3.12\"",
+  # Python 3.12 and 3.13 are supported from version 3.1.0 onwards
+  "greenlet>=3.1.0; python_version >= \"3.12\"",
 ]
 
 [project.urls]
@@ -58,18 +86,6 @@ ignore_missing_imports = true
 
 [tool.pyright]
 ignore = ["**/build/**", "**/dist/**", "**/.venv/**"]
-# [tool.poetry.dependencies]
-# python = "^3.7"
-# gevent = [
-#   { version = "*", python = ">=3.7, <3.10" },
-#   { version = "^21.12.0", python = ">=3.10, <3.11" },
-#   { version = "^22.10.2", python = "^3.11" },
-# ]
-
-# [tool.poetry.dev-dependencies]
-# mypy = "^0.991"
-# pytest = "^7.2.0"
-# pytest-cov = "^4.0.0"
 
 [[tool.uv.index]]
 name = "testpypi"
