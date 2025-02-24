@@ -32,11 +32,11 @@ tasks:
 
   test:
     cmds:
-      - uv run pytest --cov=asyncio_gevent
+      - task: pytest
 
   test:watch:
-    cmds:
-      - uv run ptw --now --cov=asyncio_gevent .
+    deps:
+      - task: pytest:watch
 
   lint:
     cmds:
