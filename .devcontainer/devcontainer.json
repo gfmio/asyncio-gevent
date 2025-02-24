@@ -9,16 +9,21 @@
       "NODE_VERSION": "lts/*"
     }
   },
-  "settings": {},
-  "extensions": [
-    "ms-python.python",
-    "ms-python.vscode-pylance",
-    "editorconfig.editorconfig"
-  ],
+  "features": {},
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "ms-python.debugpy",
+        "ms-python.vscode-pylance",
+        "editorconfig.editorconfig",
+        "charliermarsh.ruff",
+        "task.vscode-task"
+      ],
+      "settings": {}
+    }
+  },
   "postCreateCommand": "task devcontainer:postCreateCommand",
-  "remoteUser": "vscode",
-  "tasks": {
-    "test": "task test",
-    "build": "task build"
-  }
+  "containerUser": "vscode",
+  "remoteUser": "vscode"
 }
