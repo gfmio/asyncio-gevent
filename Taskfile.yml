@@ -74,7 +74,7 @@ tasks:
 
   publish:dry-run:
     cmds:
-      - uv publish --index testpypi --offline
+      - uv publish --trusted-publishing always --index testpypi --offline
 
   typecheck:
     cmds:

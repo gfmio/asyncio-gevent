@@ -85,13 +85,13 @@ jobs:
         run: |
           task build
       # Publish dry run
-      - name: Publish package distributions to TestPyPI
-        uses: pypa/gh-action-pypi-publish@release/v1
-        with:
-          repository-url: https://test.pypi.org/legacy/
-      # - name: publish-dry-run
-      #   run: |
-      #     task publish:dry-run
+      # - name: Publish package distributions to TestPyPI
+      #   uses: pypa/gh-action-pypi-publish@release/v1
+      #   with:
+      #     repository-url: https://test.pypi.org/legacy/
+      - name: publish-dry-run
+        run: |
+          task publish:dry-run
       # # Prune uv cache
       # - name: Prune uv cache
       #   run: uv cache prune --ci
