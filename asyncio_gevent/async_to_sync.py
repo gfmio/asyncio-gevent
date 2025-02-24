@@ -1,5 +1,4 @@
-from typing import Callable
-from typing import Optional
+from typing import Callable, Optional
 
 from .future_to_greenlet import future_to_greenlet
 

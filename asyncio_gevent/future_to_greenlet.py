@@ -96,9 +96,7 @@ def _run(
 
             ensured_future = asyncio.ensure_future(future, loop=active_loop)
 
-            run_until_complete_greenlet = gevent.spawn(
-                active_loop.run_until_complete, ensured_future
-            )
+            run_until_complete_greenlet = gevent.spawn(active_loop.run_until_complete, ensured_future)
             run_until_complete_greenlet.join()
         else:
             # If there's a running loop already or a loop argument was specified,

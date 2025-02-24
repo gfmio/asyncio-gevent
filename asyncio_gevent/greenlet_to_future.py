@@ -5,9 +5,7 @@ import gevent
 __all__ = ["greenlet_to_future"]
 
 
-def _dead_greenlet_to_future(
-    greenlet: gevent.Greenlet, future: asyncio.Future, autocancel_future: bool
-) -> None:
+def _dead_greenlet_to_future(greenlet: gevent.Greenlet, future: asyncio.Future, autocancel_future: bool) -> None:
     try:
         result = greenlet.get(block=False)
         if autocancel_future and isinstance(result, gevent.GreenletExit):
@@ -44,9 +42,7 @@ async def _await_greenlet(
     try:
         loop = asyncio.get_running_loop()
 
-        result, _ = await asyncio.gather(
-            future, loop.run_in_executor(None, greenlet.join)
-        )
+        result, _ = await asyncio.gather(future, loop.run_in_executor(None, greenlet.join))
 
         return result
     except asyncio.CancelledError:
@@ -86,8 +82,4 @@ def greenlet_to_future(
     `autokill_greenlet=False` as an argument to `greenlet_to_future`.
     """
 
-    return asyncio.ensure_future(
-        _await_greenlet(
-            greenlet, autocancel_future, autostart_greenlet, autokill_greenlet
-        )
-    )
+    return asyncio.ensure_future(_await_greenlet(greenlet, autocancel_future, autostart_greenlet, autokill_greenlet))

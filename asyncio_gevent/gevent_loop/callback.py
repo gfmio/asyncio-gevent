@@ -15,9 +15,7 @@ class Callback(RefMixin):
         self.callback = callback
         self.args = args
         self._handle = (
-            self.loop.aio.call_soon_threadsafe(self.run)
-            if thread_safe
-            else self.loop.aio.call_soon(self.run)
+            self.loop.aio.call_soon_threadsafe(self.run) if thread_safe else self.loop.aio.call_soon(self.run)
         )
         self._increase_ref()
 
