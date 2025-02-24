@@ -48,7 +48,7 @@ jobs:
         with:
           enable-cache: true
           # cache-local-path: /tmp/.cache/uv
-          cache-dependency-glob: ${{ hashFiles('uv.lock') }}
+          cache-dependency-glob: ${{ hashFiles('**/uv.lock') }}
           ignore-nothing-to-cache: false
           cache-suffix: ${{ runner.os }}
           prune-cache: true
@@ -58,9 +58,9 @@ jobs:
       #   uses: actions/cache@v4
       #   with:
       #     path: /tmp/.cache/uv
-      #     key: uv-${{ runner.os }}-${{ hashFiles('uv.lock') }}
+      #     key: uv-${{ runner.os }}-${{ hashFiles('**/uv.lock') }}
       #     restore-keys: |
-      #       uv-${{ runner.os }}-${{ hashFiles('uv.lock') }}
+      #       uv-${{ runner.os }}-${{ hashFiles('**/uv.lock') }}
       #       uv-${{ runner.os }}
       # Install dependencies
       - name: Install dependencies
