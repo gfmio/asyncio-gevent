@@ -52,7 +52,7 @@ tasks:
       - task: ruff:check:fix
 
   fix:watch:
-    cmds:
+    deps:
       - task: ruff:check:fix:watch
 
   fix:unsafe:
@@ -60,7 +60,7 @@ tasks:
       - task: ruff:check:fix:unsafe
 
   fix:unsafe:watch:
-    cmds:
+    deps:
       - task: ruff:check:fix:unsafe:watch
 
   format:
@@ -81,7 +81,7 @@ tasks:
       - task: pyright
 
   typecheck:watch:
-    cmds:
+    deps:
       - task: pyright:watch
 
   #
