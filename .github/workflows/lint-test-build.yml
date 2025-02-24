@@ -78,7 +78,7 @@ jobs:
         run: |
           task build
       # Publish dry run
-      - name: publish
+      - name: publish-dry-run
         run: |
           task publish:dryRun
       # # Prune uv cache
