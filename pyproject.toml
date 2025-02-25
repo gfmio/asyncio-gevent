@@ -5,7 +5,11 @@ version = "0.2.3"
 description = "asyncio & gevent in harmony"
 authors = [{ name = "Frédérique Mittelstaedt", email = "hi@gfm.io" }]
 license = { file = "./LICENSE" }
+requires-python = "<4.0,>=3.7"
+
 readme = "README.md"
+keywords = ["asyncio", "gevent"]
+
 classifiers = [
   "Development Status :: 4 - Beta",
   "Intended Audience :: Developers",
@@ -23,7 +27,6 @@ classifiers = [
   "Topic :: Software Development :: Libraries",
   "Topic :: Software Development :: Libraries :: Python Modules",
 ]
-requires-python = "<4.0,>=3.7"
 
 dependencies = [
   # Python 3.7 is supported from version 1.3 and support was dropped with version 22.10.0
@@ -61,12 +64,8 @@ homepage = "https://github.com/gfmio/asyncio-gevent"
 repository = "https://github.com/gfmio/asyncio-gevent"
 documentation = "https://github.com/gfmio/asyncio-gevent"
 
-# keywords = ["asyncio", "gevent"]
-# include = ["NOTICE"]
-
 [tool.uv]
 dev-dependencies = [
-  "mypy>=1.4.1",
   "pyright>=1.1.394",
   "pytest>=7.4.4",
   "pytest-cov>=4.1.0",
@@ -80,9 +79,6 @@ includes = ["NOTICE"]
 [build-system]
 requires = ["pdm-backend"]
 build-backend = "pdm.backend"
-
-[tool.mypy]
-ignore_missing_imports = true
 
 [tool.pyright]
 ignore = ["**/build/**", "**/dist/**", "**/.venv/**"]
