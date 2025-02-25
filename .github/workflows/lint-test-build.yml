@@ -62,9 +62,9 @@ jobs:
         run: |
           task lint
       # Typecheck
-      # - name: Typecheck
-      #   run: |
-      #     task typecheck
+      - name: Typecheck
+        run: |
+          task typecheck
       # Build
       - name: build
         run: |
