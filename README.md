@@ -19,6 +19,9 @@ Install `asyncio-gevent` from pypi using your favourite package manager.
 # If you use uv
 uv add asyncio-gevent
 
+# If you use poetry
+poetry add asyncio-gevent
+
 # If you use pip
 pip install asyncio-gevent
 ```
