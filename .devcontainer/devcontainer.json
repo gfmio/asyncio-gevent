@@ -1,18 +1,9 @@
 {
   "name": "Python 3",
-  // "build": {
-  //   "dockerfile": "Dockerfile",
-  //   "context": "..",
-  //   "args": {
-  //     "VARIANT": "3.11",
-  //     "INSTALL_NODE": "false",
-  //     "NODE_VERSION": "lts/*"
-  //   }
-  // },
   "image": "mcr.microsoft.com/devcontainers/python:3.11",
   "features": {
     "ghcr.io/eitsupi/devcontainer-features/go-task:1": {
-      "version": "3.41.0",
+      "version": "3.41.0"
     },
     "ghcr.io/jsburckhardt/devcontainer-features/uv:1": {
       "version": "0.6.1"
