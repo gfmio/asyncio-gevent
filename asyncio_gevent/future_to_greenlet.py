@@ -2,6 +2,7 @@ import asyncio
 from typing import Callable
 from typing import Optional
 from typing import Coroutine
+from typing import Union
 
 import gevent.event
 
@@ -9,7 +10,7 @@ __all__ = ["future_to_greenlet"]
 
 
 def future_to_greenlet(
-    future: asyncio.Future | Coroutine,
+    future: Union[asyncio.Future, Coroutine],
     loop: Optional[asyncio.AbstractEventLoop] = None,
     autostart_future: bool = True,
     autocancel_future: bool = True,
@@ -70,7 +71,7 @@ def future_to_greenlet(
 
 
 def _run(
-    future_or_coro: asyncio.Future | Coroutine,
+    future_or_coro: Union[asyncio.Future, Coroutine],
     loop: Optional[asyncio.AbstractEventLoop],
     autostart_future: bool,
     on_cancelled: Callable,
