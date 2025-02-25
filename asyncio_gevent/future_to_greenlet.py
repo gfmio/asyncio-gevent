@@ -2,6 +2,7 @@ import asyncio
 from asyncio import CancelledError
 from typing import Callable
 from typing import Optional
+from typing import Coroutine
 
 import gevent.event
 
@@ -9,7 +10,7 @@ __all__ = ["future_to_greenlet"]
 
 
 def future_to_greenlet(
-    future: asyncio.Future,
+    future: asyncio.Future | Coroutine,
     loop: Optional[asyncio.AbstractEventLoop] = None,
     autostart_future: bool = True,
     autocancel_future: bool = True,
@@ -47,6 +48,8 @@ def future_to_greenlet(
             greenlet.kill()
         else:
             raise
+
+    future = asyncio.ensure_future(future)
 
     greenlet = gevent.Greenlet(
         run=_run,

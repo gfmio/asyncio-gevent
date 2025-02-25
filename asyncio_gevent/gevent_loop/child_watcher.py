@@ -11,9 +11,10 @@ class ChildWatcher(Watcher):
         self.rcode = None
         self.rpid = None
 
-    def _start(self):
+    def _start(self, **kwargs):
         self.watcher.add_child_handler(self.pid, self._invoke_wrapper)
-        return True
+        # return True
+        return None
 
     def _stop(self):
         self.watcher.remove_child_handler(self.pid)

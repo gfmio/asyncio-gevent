@@ -28,8 +28,10 @@ class Callback(RefMixin):
     def run(self):
         try:
             callback, args = self.callback, self.args
-            self.callback = self.args = None
-            # noinspection PyCallingNonCallable,PyArgumentList
+            self.callback = None
+            self.args = None
+            if callback is None or args is None:
+                raise RuntimeError("Callback is already stopped")
             callback(*args)
         except Exception:
             raise

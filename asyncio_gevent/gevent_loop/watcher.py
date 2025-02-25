@@ -59,6 +59,8 @@ class Watcher(RefMixin, metaclass=abc.ABCMeta):
         # noinspection PyBroadException
         try:
             # noinspection PyCallingNonCallable
+            if self.callback is None:
+                raise RuntimeError("Callback is already stopped")
             self.callback(*self.args)
         except Exception:
             raise
