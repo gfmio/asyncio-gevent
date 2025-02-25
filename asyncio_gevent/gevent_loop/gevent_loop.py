@@ -1,6 +1,7 @@
 import sys
 import time
 from asyncio import AbstractEventLoop
+from typing import Optional
 from gevent._interfaces import ILoop
 from zope.interface import implementer
 
@@ -32,7 +33,7 @@ class GeventLoop:
     MAXPRI = 0
 
     def __init__(self, flags=None, default=None):
-        self._aio: AbstractEventLoop | None = None
+        self._aio: Optional[AbstractEventLoop] = None
         self.error_handler = None
         self.fork_watchers = set()
         self._ref_count = 0
