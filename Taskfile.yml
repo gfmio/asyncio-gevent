@@ -11,9 +11,6 @@ env:
 tasks:
   default:
     cmd: task --list-all
-      # - task: test
-      # - task: lint
-      # - task: build
   silent: true
 
   install:
