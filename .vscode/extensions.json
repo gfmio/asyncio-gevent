@@ -1,12 +1,15 @@
 {
   "recommendations": [
-    "ms-python.python",
-    "ms-python.debugpy",
-    "ms-python.vscode-pylance",
-    "editorconfig.editorconfig",
     "charliermarsh.ruff",
-    "task.vscode-task",
-    "github.vscode-github-actions"
+    "editorconfig.editorconfig",
+    "github.vscode-github-actions",
+    "ms-python.debugpy",
+    "ms-python.python",
+    "ms-python.vscode-pylance",
+    "ms-vscode-remote.remote-containers",
+    "redhat.vscode-yaml",
+    "tamasfe.even-better-toml",
+    "task.vscode-task"
   ],
   "unwantedRecommendations": []
 }
