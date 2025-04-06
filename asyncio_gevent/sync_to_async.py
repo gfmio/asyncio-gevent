@@ -1,3 +1,4 @@
+import functools
 from typing import Callable
 from typing import Optional
 
@@ -11,6 +12,7 @@ def sync_to_async(
     autocancel_future: bool = True,
     autostart_greenlet: bool = True,
     autokill_greenlet: bool = True,
+    autorestore_context: bool = True,
 ) -> Callable:
     """
     Convert a synchronous/blocking function to an asynchronous one.
@@ -26,16 +28,19 @@ def sync_to_async(
                 autocancel_future=autocancel_future,
                 autostart_greenlet=autostart_greenlet,
                 autokill_greenlet=autokill_greenlet,
+                autorestore_context=autorestore_context,
             )
 
         return decorator
 
+    @functools.wraps(fn)
     async def coroutine(*args, **kwargs):
         return await greenlet_to_future(
             gevent.Greenlet(fn, *args, **kwargs),
             autocancel_future=autocancel_future,
             autostart_greenlet=autostart_greenlet,
             autokill_greenlet=autokill_greenlet,
+            autorestore_context=autorestore_context,
         )
 
     return coroutine

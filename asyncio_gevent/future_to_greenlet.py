@@ -8,7 +8,7 @@ import gevent.event
 __all__ = ["future_to_greenlet"]
 
 
-def future_to_greenlet(
+def future_to_greenlet(  # noqa: C901
     future: asyncio.Future,
     loop: Optional[asyncio.AbstractEventLoop] = None,
     autostart_future: bool = True,
@@ -66,7 +66,7 @@ def future_to_greenlet(
     return greenlet
 
 
-def _run(
+def _run(  # noqa: C901
     future: asyncio.Future,
     loop: Optional[asyncio.AbstractEventLoop],
     autostart_future: bool,
@@ -94,7 +94,12 @@ def _run(
             active_loop = asyncio.new_event_loop()
             asyncio.set_event_loop(active_loop)
 
-            ensured_future = asyncio.ensure_future(future, loop=active_loop)
+            if asyncio.iscoroutine(future):
+                ensured_future = active_loop.create_task(
+                    future, context=gevent.getcurrent().gr_context
+                )
+            else:
+                ensured_future = asyncio.ensure_future(future, loop=active_loop)
 
             run_until_complete_greenlet = gevent.spawn(
                 active_loop.run_until_complete, ensured_future
@@ -104,7 +109,12 @@ def _run(
             # If there's a running loop already or a loop argument was specified,
             # then schedule the future and block until it's done
 
-            ensured_future = asyncio.ensure_future(future, loop=active_loop)
+            if asyncio.iscoroutine(future):
+                ensured_future = active_loop.create_task(
+                    future, context=gevent.getcurrent().gr_context
+                )
+            else:
+                ensured_future = asyncio.ensure_future(future, loop=active_loop)
 
             event = gevent.event.Event()
 
