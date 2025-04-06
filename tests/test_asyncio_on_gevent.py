@@ -1,3 +1,5 @@
+import contextvars
+
 import gevent.monkey
 
 gevent.monkey.patch_all()
@@ -90,6 +92,50 @@ def test_asyncio_on_gevent_supports_awaiting_greenlets_with_future_to_greenlet()
     greenlet.join()
     result = greenlet.get()
     assert result is None
+
+
+def test_asyncio_on_gevent___sync_to_async__pass_and_copyback_context():
+    """Ensure we are pass current context to greenlet and copy-back it after execution finished.
+
+    The main reason for this behavior is we make usage of async_to_sync and sync_to_async is transparent.
+    Programmers can use it without any _unexpected_ side effects.
+    """
+
+    async def main():
+        var = contextvars.ContextVar("var")
+        var.set("initial")
+
+        def sync_task1():
+            assert var.get() == "initial"
+            var.set("task1")
+
+        async_task1 = asyncio_gevent.sync_to_async(sync_task1)
+
+        await async_task1()
+
+        assert var.get() == "task1"
+
+    asyncio.run(main())
+
+
+def test_asyncio_on_gevent___async_to_sync__pass_and_copyback_context():
+    """Ensure we are pass current context to greenlet and copy-back it after execution finished.
+
+    The main reason for this behavior is we make usage of async_to_sync and sync_to_async is transparent.
+    Programmers can use it without any _unexpected_ side effects.
+    """
+    var = contextvars.ContextVar("var")
+    var.set("initial")
+
+    async def async_task1():
+        assert var.get() == "initial"
+        var.set("task1")
+
+    sync_task1 = asyncio_gevent.async_to_sync(async_task1)
+
+    sync_task1()
+
+    assert var.get() == "task1"
 
 
 async def asyncio_on_gevent_supports_awaiting_greenlets_1():

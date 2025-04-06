@@ -1,8 +1,14 @@
 import asyncio
+import contextvars
+import typing
 
 import gevent
 
 __all__ = ["greenlet_to_future"]
+
+import concurrent.futures
+
+wait_executor = concurrent.futures.ThreadPoolExecutor(max_workers=1)
 
 
 def _dead_greenlet_to_future(
@@ -23,7 +29,10 @@ async def _await_greenlet(
     autocancel_future: bool,
     autostart_greenlet: bool,
     autokill_greenlet: bool,
+    autorestore_context: bool,
 ):
+    greenlet.gr_context = contextvars.copy_context()
+
     # Start the greenlet if it is not yet running
     if not greenlet and autostart_greenlet:
         greenlet.start()
@@ -44,8 +53,13 @@ async def _await_greenlet(
     try:
         loop = asyncio.get_running_loop()
 
-        result, _ = await asyncio.gather(
-            future, loop.run_in_executor(None, greenlet.join)
+        # Actually we do not need to join greenlet
+        # because we are awaiting future
+        # but we should ensure context switching to it
+        # this is why we call gevent.idle.
+        # https://github.com/gfmio/asyncio-gevent/issues/8#issuecomment-1829335079
+        result, *_ = await asyncio.gather(
+            future, loop.run_in_executor(wait_executor, gevent.idle)
         )
 
         return result
@@ -53,6 +67,10 @@ async def _await_greenlet(
         if autokill_greenlet:
             greenlet.kill()
         raise
+    finally:
+        if autorestore_context:
+            for var in greenlet.gr_context:
+                var.set(greenlet.gr_context[var])
 
 
 def greenlet_to_future(
@@ -60,7 +78,8 @@ def greenlet_to_future(
     autocancel_future: bool = True,
     autostart_greenlet: bool = True,
     autokill_greenlet: bool = True,
-) -> asyncio.Future:
+    autorestore_context: bool = True,
+) -> typing.Awaitable:
     """
     Wrap a greenlet in a future.
 
@@ -86,8 +105,10 @@ def greenlet_to_future(
     `autokill_greenlet=False` as an argument to `greenlet_to_future`.
     """
 
-    return asyncio.ensure_future(
-        _await_greenlet(
-            greenlet, autocancel_future, autostart_greenlet, autokill_greenlet
-        )
+    return _await_greenlet(
+        greenlet,
+        autocancel_future,
+        autostart_greenlet,
+        autokill_greenlet,
+        autorestore_context,
     )
