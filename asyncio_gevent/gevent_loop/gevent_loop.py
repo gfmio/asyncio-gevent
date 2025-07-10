@@ -2,6 +2,7 @@ import sys
 import time
 from asyncio import AbstractEventLoop
 from typing import Optional
+
 from gevent._interfaces import ILoop
 from zope.interface import implementer
 
@@ -274,11 +275,11 @@ class GeventLoop:
         return aio
 
     def _get_or_create_aio(self):
-        if self._aio and (self._aio.is_closed or getattr(self.aio, "_stopping", False)):
-            self._aio = None
-
         if self._aio:
-            return self._aio
+            if self._aio.is_closed() or getattr(self._aio, "_stopping", False):
+                self._aio = None
+            else:
+                return self._aio
 
         with MonkeyJail():
             import asyncio
