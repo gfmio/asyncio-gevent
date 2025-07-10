@@ -34,7 +34,7 @@ def future_to_greenlet(
 
     If the greenlet gets killed, the by default the future gets cancelled. To
     prevent this from happening and having the future return the
-    `GreenletExit` objct instead, you can pass `autocancel_future=False` as an
+    `GreenletExit` object instead, you can pass `autocancel_future=False` as an
     argument to `future_to_greenlet`.
 
     If the future gets cancelled, the greenlet gets killed and will return a
