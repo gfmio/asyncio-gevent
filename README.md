@@ -16,6 +16,9 @@ asyncio-gevent is a fork and rewrite of `aiogevent` and `tulipcore` for modern p
 Install `asyncio-gevent` from pypi using your favourite package manager.
 
 ```sh
+# If you use uv
+uv add asyncio-gevent
+
 # If you use poetry
 poetry add asyncio-gevent
 

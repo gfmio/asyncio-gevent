@@ -1,27 +1,31 @@
-// For format details, see https://aka.ms/vscode-remote/devcontainer.json or this file's README at:
-// https://github.com/microsoft/vscode-dev-containers/tree/v0.163.0/containers/python-3
 {
   "name": "Python 3",
-  "build": {
-    "dockerfile": "Dockerfile",
-    "context": "..",
-    "args": {
-      // Update 'VARIANT' to pick a Python version: 3, 3.6, 3.7, 3.8, 3.9
-      "VARIANT": "3.11",
-      "INSTALL_NODE": "false",
-      "NODE_VERSION": "lts/*"
+  "image": "mcr.microsoft.com/devcontainers/python:3.11",
+  "features": {
+    "ghcr.io/eitsupi/devcontainer-features/go-task:1": {
+      "version": "3.41.0"
+    },
+    "ghcr.io/jsburckhardt/devcontainer-features/uv:1": {
+      "version": "0.6.1"
     }
   },
-  // Set *default* container specific settings.json values on container create.
-  "settings": {},
-  // Add the IDs of extensions you want installed when the container is created.
-  "extensions": [
-    "ms-python.python",
-    "ms-python.vscode-pylance",
-    "editorconfig.editorconfig"
-  ],
-  // Use 'postCreateCommand' to run commands after the container is created.
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "charliermarsh.ruff",
+        "editorconfig.editorconfig",
+        "github.vscode-github-actions",
+        "ms-python.debugpy",
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "redhat.vscode-yaml",
+        "tamasfe.even-better-toml",
+        "task.vscode-task"
+      ],
+      "settings": {}
+    }
+  },
   "postCreateCommand": "task devcontainer:postCreateCommand",
-  // Comment out to connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
+  "containerUser": "vscode",
   "remoteUser": "vscode"
 }

@@ -1,36 +1,95 @@
-[tool.poetry]
+#!schema: https://json.schemastore.org/pyproject.json
+[project]
 name = "asyncio-gevent"
 version = "0.2.5"
 description = "asyncio & gevent in harmony"
-authors = ["Frédérique Mittelstaedt <hi@gfm.io>"]
-license = "MIT"
+authors = [{ name = "Frédérique Mittelstaedt", email = "hi@gfm.io" }]
+license = { file = "./LICENSE }
+requires-python = "<4.0,>=3.7"
+
 readme = "README.md"
+keywords = ["asyncio", "gevent"]
+
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.7",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: Implementation :: CPython",
+  "Programming Language :: Python :: Implementation :: PyPy",
+  "Topic :: Software Development :: Libraries",
+  "Topic :: Software Development :: Libraries :: Python Modules",
+]
+
+dependencies = [
+  # Python 3.7 is supported from version 1.3 and support was dropped with version 22.10.0
+  "gevent<22.10.0,>=1.3; python_version >= \"3.7\" and python_version < \"3.8\"",
+  # Python 3.8 is supported from version 1.5 and support was dropped with version 24.10.1
+  "gevent<24.10.1,>=1.5; python_version >= \"3.8\" and python_version < \"3.9\"",
+  # Python 3.9 is supported from version 20.6.0 onwards
+  "gevent>=20.6.0; python_version >= \"3.9\" and python_version < \"3.10\"",
+  # Python 3.10 is supported from version 21.8.0 onwards
+  "gevent>=21.8.0; python_version >= \"3.10\" and python_version < \"3.11\"",
+  # Python 3.11 is supported from version 22.08.0 onwards
+  "gevent>=22.08.0; python_version >= \"3.11\" and python_version < \"3.12\"",
+  # Python 3.12 is supported from version 23.7.0 onwards
+  "gevent>=23.7.0; python_version >= \"3.12\" and python_version < \"3.13\"",
+  # Python 3.13 is supported from version 24.10.1 onwards
+  "gevent>=24.10.1; python_version >= \"3.13\"",
+
+  # greenlet is a dependency of gevent
+  # Python 3.7 is supported from version 0.4.13 until 3.1.0
+  "greenlet<=3.1.0,>=0.4.13; python_version >= \"3.7\" and python_version < \"3.8\"",
+  # Python 3.8 is supported from version 0.4.13 until 3.1.0
+  "greenlet<=3.1.0,>=0.4.13; python_version >= \"3.8\" and python_version < \"3.9\"",
+  # Python 3.9 is supported from version 0.4.16 onwards
+  "greenlet>=0.4.16; python_version >= \"3.9\" and python_version < \"3.10\"",
+  # Python 3.10 is supported from version 1.1.0 onwards
+  "greenlet>=1.1.0; python_version >= \"3.10\" and python_version < \"3.11\"",
+  # Python 3.11 is supported from version 1.1.3 onwards
+  "greenlet>=1.1.3; python_version >= \"3.11\" and python_version < \"3.12\"",
+  # Python 3.12 and 3.13 are supported from version 3.1.0 onwards
+  "greenlet>=3.1.0; python_version >= \"3.12\"",
+]
+
+[project.urls]
 homepage = "https://github.com/gfmio/asyncio-gevent"
 repository = "https://github.com/gfmio/asyncio-gevent"
 documentation = "https://github.com/gfmio/asyncio-gevent"
-keywords = ["asyncio", "gevent"]
-include = ["NOTICE"]
 
-[tool.poetry.dependencies]
-python = "^3.7"
-gevent = [
-    {version = "*", python = ">=3.7, <3.10"},
-    {version = "^23.9.1", python = ">=3.10, <3.11"},
-    {version = "^23.9.1", python = "^3.11"}
+[tool.uv]
+dev-dependencies = [
+  "pyright>=1.1.394",
+  "pytest>=7.4.4",
+  "pytest-cov>=4.1.0",
+  "pytest-watcher>=0.4.3",
+  "ruff>=0.9.7",
 ]
 
-[tool.poetry.dev-dependencies]
-black = "^22.10.0"
-flake8 = "^5.0.4"
-mypy = "^0.991"
-pydocstyle = "^6.1.1"
-pytest = "^7.2.0"
-pytest-cov = "^4.0.0"
-reorder-python-imports = "^3.9.0"
+[tool.pdm.build]
+includes = ["NOTICE"]
 
 [build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
 
-[tool.mypy]
-ignore_missing_imports = true
+[tool.pyright]
+ignore = ["**/build/**", "**/dist/**", "**/.venv/**"]
+
+[[tool.uv.index]]
+name = "testpypi"
+url = "https://test.pypi.org/simple"
+explicit = true
+publish-url = "https://test.pypi.org/legacy"
+
+[[tool.uv.index]]
+name = "pypi"
+url = "https://pypi.org/simple"
+publish-url = "https://upload.pypi.org/legacy/"
