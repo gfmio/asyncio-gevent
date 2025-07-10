@@ -1,5 +1,7 @@
 import sys
 import time
+from asyncio import AbstractEventLoop
+from typing import Optional
 
 from gevent._interfaces import ILoop
 from zope.interface import implementer
@@ -32,7 +34,7 @@ class GeventLoop:
     MAXPRI = 0
 
     def __init__(self, flags=None, default=None):
-        self._aio = None
+        self._aio: Optional[AbstractEventLoop] = None
         self.error_handler = None
         self.fork_watchers = set()
         self._ref_count = 0
@@ -231,6 +233,7 @@ class GeventLoop:
             # we do want to do getattr every time so that setting
             # Hub.handle_error property just works
             handle_error = getattr(error_handler, "handle_error", error_handler)
+            assert handle_error is not None
             handle_error(context, _type, value, tb)
         else:
             self.aio.default_exception_handler(context)
@@ -267,16 +270,16 @@ class GeventLoop:
             self.aio.stop()
 
     @property
-    def aio(self):
-        self._get_or_create_aio()
-        return self._aio
+    def aio(self) -> AbstractEventLoop:
+        aio = self._get_or_create_aio()
+        return aio
 
     def _get_or_create_aio(self):
-        if self._aio and (self._aio.is_closed or self.aio._stopping):
-            self._aio = None
-
         if self._aio:
-            return self._aio
+            if self._aio.is_closed() or getattr(self._aio, "_stopping", False):
+                self._aio = None
+            else:
+                return self._aio
 
         with MonkeyJail():
             import asyncio

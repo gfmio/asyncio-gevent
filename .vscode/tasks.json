@@ -4,63 +4,278 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "task (test, lint & build)",
-      "type": "shell",
       "command": "task",
+      "args": [
+        "build"
+      ],
+      "type": "process",
+      "label": "build",
+      "detail": "Build the project",
       "group": {
         "kind": "build",
         "isDefault": true
       }
     },
     {
-      "label": "build",
-      "type": "shell",
-      "command": "task build",
-      "group": "build",
-    },
-    {
-      "label": "test",
-      "type": "shell",
-      "command": "task test",
+      "command": "task",
+      "args": [
+        "dev"
+      ],
+      "type": "process",
+      "label": "dev",
+      "detail": "Run tests, linters, and typecheckers in watch mode",
       "group": {
         "kind": "test",
         "isDefault": true
-      },
+      }
     },
     {
-      "label": "lint",
-      "type": "shell",
-      "command": "task lint",
+      "command": "task",
+      "args": [
+        "fix"
+      ],
+      "type": "process",
+      "label": "fix",
+      "detail": "Fix auto-fixable linting errors",
+      "group": "test"
     },
     {
-      "label": "reorder-python-imports",
-      "type": "shell",
-      "command": "task reorder-python-imports",
+      "command": "task",
+      "args": [
+        "format"
+      ],
+      "type": "process",
+      "label": "format",
+      "detail": "Format code",
+      "group": "test"
     },
     {
-      "label": "black",
-      "type": "shell",
-      "command": "task black",
-    },
-    {
-      "label": "flake8",
-      "type": "shell",
-      "command": "task flake8",
-    },
-    {
-      "label": "mypy",
-      "type": "shell",
-      "command": "task mypy",
-    },
-    {
+      "command": "task",
+      "args": [
+        "install"
+      ],
+      "type": "process",
       "label": "install",
-      "type": "shell",
-      "command": "task install",
+      "detail": "Install dependencies"
     },
     {
-      "label": "publish-dry-run",
-      "type": "shell",
-      "command": "task publish:dryRun",
+      "command": "task",
+      "args": [
+        "lint"
+      ],
+      "type": "process",
+      "label": "lint",
+      "detail": "Run linters",
+      "group": "test"
     },
-  ]
+    {
+      "command": "task",
+      "args": [
+        "test"
+      ],
+      "type": "process",
+      "label": "test",
+      "detail": "Run tests",
+      "group": "test"
+    },
+    {
+      "command": "task",
+      "args": [
+        "typecheck"
+      ],
+      "type": "process",
+      "label": "typecheck",
+      "detail": "Run typecheckers",
+      "group": "test"
+    },
+    {
+      "command": "task",
+      "args": [
+        "fix:unsafe"
+      ],
+      "type": "process",
+      "label": "fix:unsafe",
+      "detail": "Fix auto-fixable linting errors (unsafe)",
+      "group": "test"
+    },
+    {
+      "command": "task",
+      "args": [
+        "fix:unsafe:watch"
+      ],
+      "type": "process",
+      "label": "fix:unsafe:watch",
+      "detail": "Fix auto-fixable linting errors (unsafe) in watch mode",
+      "group": "test"
+    },
+    {
+      "command": "task",
+      "args": [
+        "fix:watch"
+      ],
+      "type": "process",
+      "label": "fix:watch",
+      "detail": "Fix auto-fixable linting errors in watch mode",
+      "group": "test"
+    },
+    {
+      "command": "task",
+      "args": [
+        "lint:watch"
+      ],
+      "type": "process",
+      "label": "lint:watch",
+      "detail": "Run linters in watch mode",
+      "group": "test"
+    },
+    {
+      "command": "task",
+      "args": [
+        "test:watch"
+      ],
+      "type": "process",
+      "label": "test:watch",
+      "detail": "Run tests in watch mode",
+      "group": "test"
+    },
+    {
+      "command": "task",
+      "args": [
+        "typecheck:watch"
+      ],
+      "type": "process",
+      "label": "typecheck:watch",
+      "detail": "Run typecheckers in watch mode",
+      "group": "test"
+    },
+    // {
+    //   "command": "task",
+    //   "args": [
+    //     "pyright"
+    //   ],
+    //   "type": "process",
+    //   "label": "pyright",
+    //   "detail": "Run pyright",
+    //   "group": "test"
+    // },
+    // {
+    //   "command": "task",
+    //   "args": [
+    //     "pytest"
+    //   ],
+    //   "type": "process",
+    //   "label": "pytest",
+    //   "detail": "Run pytest",
+    //   "group": "test"
+    // },
+    // {
+    //   "command": "task",
+    //   "args": [
+    //     "pyright:watch"
+    //   ],
+    //   "type": "process",
+    //   "label": "pyright:watch",
+    //   "detail": "Run pyright in watch mode",
+    //   "group": "test"
+    // },
+    // {
+    //   "command": "task",
+    //   "args": [
+    //     "pytest:watch"
+    //   ],
+    //   "type": "process",
+    //   "label": "pytest:watch",
+    //   "detail": "Run pytest in watch mode",
+    //   "group": "test"
+    // },
+    // {
+    //   "command": "task",
+    //   "args": [
+    //     "ruff:check"
+    //   ],
+    //   "type": "process",
+    //   "label": "ruff:check",
+    //   "detail": "Run ruff check",
+    //   "group": "test"
+    // },
+    // {
+    //   "command": "task",
+    //   "args": [
+    //     "ruff:check:fix"
+    //   ],
+    //   "type": "process",
+    //   "label": "ruff:check:fix",
+    //   "detail": "Run ruff check with auto-fix",
+    //   "group": "test"
+    // },
+    // {
+    //   "command": "task",
+    //   "args": [
+    //     "ruff:check:fix:unsafe"
+    //   ],
+    //   "type": "process",
+    //   "label": "ruff:check:fix:unsafe",
+    //   "detail": "Run ruff check with auto-fix (unsafe)",
+    //   "group": "test"
+    // },
+    // {
+    //   "command": "task",
+    //   "args": [
+    //     "ruff:check:fix:unsafe:watch"
+    //   ],
+    //   "type": "process",
+    //   "label": "ruff:check:fix:unsafe:watch",
+    //   "detail": "Run ruff check with auto-fix (unsafe) in watch mode",
+    //   "group": "test"
+    // },
+    // {
+    //   "command": "task",
+    //   "args": [
+    //     "ruff:check:fix:watch"
+    //   ],
+    //   "type": "process",
+    //   "label": "ruff:check:fix:watch",
+    //   "detail": "Run ruff check with auto-fix in watch mode",
+    //   "group": "test"
+    // },
+    // {
+    //   "command": "task",
+    //   "args": [
+    //     "ruff:check:watch"
+    //   ],
+    //   "type": "process",
+    //   "label": "ruff:check:watch",
+    //   "detail": "Run ruff check in watch mode",
+    //   "group": "test"
+    // },
+    // {
+    //   "command": "task",
+    //   "args": [
+    //     "ruff:format"
+    //   ],
+    //   "type": "process",
+    //   "label": "ruff:format",
+    //   "detail": "Run ruff format",
+    //   "group": "test"
+    // },
+    // {
+    //   "command": "task",
+    //   "args": [
+    //     "ruff:format:check"
+    //   ],
+    //   "type": "process",
+    //   "label": "ruff:format:check",
+    //   "detail": "Run ruff format check",
+    //   "group": "test"
+    // },
+    // {
+    //   "command": "task",
+    //   "args": [
+    //     "devcontainer:postCreateCommand"
+    //   ],
+    //   "type": "process",
+    //   "label": "devcontainer:postCreateCommand",
+    //   "detail": "Initialize the devcontainer after the container is created"
+    // },
+  ],
 }

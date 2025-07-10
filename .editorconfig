@@ -1,12 +1,119 @@
-# editorconfig.org
+# EditorConfig helps developers define and maintain consistent coding styles
+# across different editors and IDEs
+
+# Top-most EditorConfig file
 root = true
 
+# Default settings for all files
 [*]
 indent_style = space
+indent_size = 2
+end_of_line = lf
 charset = utf-8
 trim_trailing_whitespace = true
 insert_final_newline = true
+
+# Tab-indented languages
+[*.{go,makefile}]
+indent_style = tab
+
+# JSON files (require two spaces for consistency)
+[*.json]
+indent_style = space
 indent_size = 2
 
-[**.py]
+# YAML files (require two spaces by convention)
+[*.{yml,yaml}]
+indent_style = space
+indent_size = 2
+
+# Python files
+[*.py]
+indent_style = space
 indent_size = 4
+
+# JavaScript, TypeScript, and related files
+[*.{js,ts,jsx,tsx}]
+indent_style = space
+indent_size = 2
+
+# HTML and CSS files
+[*.{html,css,scss}]
+indent_style = space
+indent_size = 2
+
+# Markdown files
+[*.md]
+trim_trailing_whitespace = false
+
+# Shell scripts
+# See also: https://google.github.io/styleguide/shellguide.html
+[*.sh]
+# like -i=2
+indent_style = space
+indent_size = 2
+
+# --language-variant
+shell_variant      = bash
+binary_next_line   = true
+# --case-indent
+switch_case_indent = true
+space_redirects    = true
+keep_padding       = false
+# --func-next-line
+function_next_line = false
+
+# C, C++, and similar languages
+[*.{c,cpp,h,hpp}]
+indent_style = space
+indent_size = 4
+
+# Java files
+[*.java]
+indent_style = space
+indent_size = 4
+
+# PHP files
+[*.php]
+indent_style = space
+indent_size = 4
+
+# Ruby files
+[*.rb]
+indent_style = space
+indent_size = 2
+
+# Swift files
+[*.swift]
+indent_style = space
+indent_size = 4
+
+# Kotlin files
+[*.kt]
+indent_style = space
+indent_size = 4
+
+# TOML files
+[*.toml]
+indent_style = space
+indent_size = 2
+
+# Rust files
+[*.rs]
+indent_style = space
+indent_size = 4
+
+# SQL files
+[*.sql]
+indent_style = space
+indent_size = 4
+
+# XML files
+[*.{xml,xsl}]
+indent_style = space
+indent_size = 2
+
+# INI files
+[*.ini]
+indent_style = space
+indent_size = 2

@@ -1,0 +1,65 @@
+# Workflow to release new versions to PyPI
+name: Release
+
+concurrency:
+  cancel-in-progress: false
+  group: ${{ github.workflow }}
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+jobs:
+  release:
+    name: Release
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.event }}-${{ github.ref }}-${{ github.job }}-${{ matrix.python-version }}
+      cancel-in-progress: true
+    environment:
+      name: "pypi"
+    permissions:
+      # IMPORTANT: this permission is mandatory for Trusted Publishing
+      id-token: write
+    timeout-minutes: 2
+    runs-on: ubuntu-22.04 # The Python 3.7 build is only available on Ubuntu 22.04
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11"]
+    env:
+      UV_PYTHON: ${{ matrix.python-version }}
+    steps:
+      # Checkout
+      - uses: actions/checkout@v4
+      # Install task
+      - name: Install Task
+        uses: arduino/setup-task@v2
+        with:
+          version: 3.41.0
+      # Set up python
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      # Install uv
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          version: 0.6.1
+          enable-cache: true
+          cache-dependency-glob: '**/uv.lock'
+          ignore-nothing-to-cache: false
+          cache-suffix: ${{ runner.os }}
+          prune-cache: true
+      # Install dependencies
+      - name: Install dependencies
+        run: task install
+      # Build
+      - name: build
+        run: |
+          task build
+      # Publish
+      - name: publish
+        run: |
+          uv publish --index pypi --trusted-publishing always

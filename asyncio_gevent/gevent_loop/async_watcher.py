@@ -8,8 +8,9 @@ class AsyncWatcher(Watcher):
         super().__init__(loop, ref=ref)
         self._handle = None
 
-    def _start(self):
-        return True
+    def _start(self, **kwargs):
+        # return True
+        return None
 
     def _stop(self):
         if self._handle is not None:

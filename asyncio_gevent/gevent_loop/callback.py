@@ -15,9 +15,7 @@ class Callback(RefMixin):
         self.callback = callback
         self.args = args
         self._handle = (
-            self.loop.aio.call_soon_threadsafe(self.run)
-            if thread_safe
-            else self.loop.aio.call_soon(self.run)
+            self.loop.aio.call_soon_threadsafe(self.run) if thread_safe else self.loop.aio.call_soon(self.run)
         )
         self._increase_ref()
 
@@ -30,8 +28,10 @@ class Callback(RefMixin):
     def run(self):
         try:
             callback, args = self.callback, self.args
-            self.callback = self.args = None
-            # noinspection PyCallingNonCallable,PyArgumentList
+            self.callback = None
+            self.args = None
+            if callback is None or args is None:
+                raise RuntimeError("Callback is already stopped")
             callback(*args)
         except Exception:
             raise

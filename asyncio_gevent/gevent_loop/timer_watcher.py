@@ -9,9 +9,10 @@ class TimerWatcher(Watcher):
         self.after = after
         self._handle = None
 
-    def _start(self, update=True):
+    def _start(self, update=True, **kwargs):
         self._handle = self.loop.aio.call_later(self.after, self._invoke)
-        return True
+        # return True
+        return None
 
     def _stop(self):
         if self._handle is not None:

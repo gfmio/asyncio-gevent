@@ -14,12 +14,13 @@ class IoWatcher(Watcher):
         self._reader = events & READ
         self._writer = events & WRITE
 
-    def _start(self, pass_events=False):
+    def _start(self, pass_events=False, **kwargs):
         if self._reader:
             self.loop.aio.add_reader(self.fd, self._invoke)
         if self._writer:
             self.loop.aio.add_writer(self.fd, self._invoke)
-        return True
+        # return True
+        return None
 
     def _stop(self):
         if self._reader:

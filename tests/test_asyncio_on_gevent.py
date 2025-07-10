@@ -26,9 +26,7 @@ def test_asyncio_on_gevent_will_run_in_dummy_thread_with_asyncio_run():
 def test_asyncio_on_gevent_will_run_in_dummy_thread_with_future_to_greenlet():
     assert threading.current_thread().name == "MainThread"
 
-    greenlet = asyncio_gevent.future_to_greenlet(
-        asyncio_on_gevent_will_run_in_dummy_thread_async("Dummy-2")
-    )
+    greenlet = asyncio_gevent.future_to_greenlet(asyncio_on_gevent_will_run_in_dummy_thread_async("Dummy-2"))
     greenlet.start()
     greenlet.join()
     result = greenlet.get()
@@ -49,9 +47,7 @@ def test_asyncio_on_gevent_supports_nested_async_calls_with_asyncio_run():
 
 
 def test_asyncio_on_gevent_supports_nested_async_calls_with_future_to_greenlet():
-    greenlet = asyncio_gevent.future_to_greenlet(
-        asyncio_on_gevent_supports_nested_async_calls_1()
-    )
+    greenlet = asyncio_gevent.future_to_greenlet(asyncio_on_gevent_supports_nested_async_calls_1())
     greenlet.start()
     greenlet.join()
     result = greenlet.get()
@@ -83,9 +79,7 @@ def test_asyncio_on_gevent_supports_awaiting_greenlets_with_asyncio_run():
 
 
 def test_asyncio_on_gevent_supports_awaiting_greenlets_with_future_to_greenlet():
-    greenlet = asyncio_gevent.future_to_greenlet(
-        asyncio_on_gevent_supports_awaiting_greenlets_1()
-    )
+    greenlet = asyncio_gevent.future_to_greenlet(asyncio_on_gevent_supports_awaiting_greenlets_1())
     greenlet.start()
     greenlet.join()
     result = greenlet.get()

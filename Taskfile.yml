@@ -1,0 +1,176 @@
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
+# https://taskfile.dev
+version: "3"
+
+# Enables POSIX shell options for all commands in the Taskfile. See https://www.gnu.org/software/bash/manual/html_node/The-Set-Builtin.html
+set: [pipefail]
+# Enables Bash shell options for all commands in the Taskfile. See https://www.gnu.org/software/bash/manual/html_node/The-Shopt-Builtin.html
+shopt: [globstar]
+
+# A list of `.env` file paths to be parsed.
+dotenv: [".env"]
+
+# A set of global variables.
+vars:
+  REPO_ROOT:
+    sh: git rev-parse --show-toplevel
+
+# A set of global environment variables.
+env:
+  VIRTUAL_ENV:
+    sh: echo "{{.REPO_ROOT}}/.venv"
+  PATH:
+    sh: echo "{{.REPO_ROOT}}/.venv/bin:$PATH"
+
+# Defines how the STDOUT and STDERR are printed when running tasks in parallel. The interleaved output prints lines in real time (default). The group output will print the entire output of a command once, after it finishes, so you won't have live feedback for commands that take a long time to run. The prefix output will prefix every line printed by a command with [task-name] as the prefix, but you can customize the prefix for a command with the prefix: attribute. (Allowed Values: interleaved, prefixed, group)
+output: interleaved
+
+# Default 'silent' options for this Taskfile. If `false`, can be overridden with `true` in a task by task basis.
+silent: false
+
+# A set of task definitions.
+tasks:
+  default:
+    cmd: task --list-all
+    desc: "List all available tasks"
+
+  install:
+    cmd: uv sync --frozen
+    desc: "Install dependencies"
+
+  dev:
+    deps:
+      - task: test:watch
+      - task: fix:watch
+      - task: typecheck:watch
+    desc: "Run tests, linters, and typecheckers in watch mode"
+
+  build:
+    cmd: uv build
+    desc: "Build the project"
+
+  test:
+    cmds:
+      - task: pytest
+    desc: "Run tests"
+
+  test:watch:
+    deps:
+      - task: pytest:watch
+    desc: "Run tests in watch mode"
+
+  lint:
+    cmds:
+      - task: ruff:check
+      - task: ruff:format:check
+    desc: "Run linters"
+
+  lint:watch:
+    deps:
+      - task: ruff:check:watch
+    desc: "Run linters in watch mode"
+
+  fix:
+    cmds:
+      - task: ruff:check:fix
+    desc: "Fix auto-fixable linting errors"
+
+  fix:watch:
+    deps:
+      - task: ruff:check:fix:watch
+    desc: "Fix auto-fixable linting errors in watch mode"
+
+  fix:unsafe:
+    cmds:
+      - task: ruff:check:fix:unsafe
+    desc: "Fix auto-fixable linting errors (unsafe)"
+
+  fix:unsafe:watch:
+    deps:
+      - task: ruff:check:fix:unsafe:watch
+    desc: "Fix auto-fixable linting errors (unsafe) in watch mode"
+
+  format:
+    aliases: ["fmt"]
+    cmds:
+      - task: ruff:format
+    desc: "Format code"
+
+  typecheck:
+    cmds:
+      - task: pyright
+    desc: "Run typecheckers"
+
+  typecheck:watch:
+    deps:
+      - task: pyright:watch
+    desc: "Run typecheckers in watch mode"
+
+  #
+  # Tools
+  #
+
+  # pyright
+
+  pyright:
+    cmds:
+      - uv run pyright .
+    desc: "Run pyright"
+
+  pyright:watch:
+    cmds:
+      - uv run pyright --watch .
+    desc: "Run pyright in watch mode"
+
+  # pytest
+
+  pytest:
+    cmd: uv run pytest --cov=asyncio_gevent
+    desc: "Run pytest"
+
+  pytest:watch:
+    cmd: uv run ptw --now --cov=asyncio_gevent .
+    desc: "Run pytest in watch mode"
+
+  # ruff
+
+  ruff:check:
+    cmd: uv run ruff check
+    desc: "Run ruff check"
+
+  ruff:check:watch:
+    cmd: uv run ruff check --watch
+    desc: "Run ruff check in watch mode"
+
+  ruff:check:fix:
+    cmd: uv run ruff check --fix
+    desc: "Run ruff check with auto-fix"
+
+  ruff:check:fix:watch:
+    cmd: uv run ruff check --fix --watch
+    desc: "Run ruff check with auto-fix in watch mode"
+
+  ruff:check:fix:unsafe:
+    cmd: uv run ruff check --fix --unsafe-fixes
+    desc: "Run ruff check with auto-fix (unsafe)"
+
+  ruff:check:fix:unsafe:watch:
+    cmd: uv run ruff check --fix --unsafe-fixes --watch
+    desc: "Run ruff check with auto-fix (unsafe) in watch mode"
+
+  ruff:format:
+    cmd: uv run ruff format
+    desc: "Run ruff format"
+
+  ruff:format:check:
+    cmd: uv run ruff format --check
+    desc: "Run ruff format check"
+
+  #
+  # devcontainer commands
+  #
+
+  devcontainer:postCreateCommand:
+    cmds:
+      - task: install
+    desc: "Initialize the devcontainer after the container is created"
