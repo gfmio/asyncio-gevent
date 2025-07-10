@@ -1,5 +1,5 @@
+# Lint, Test & Build pipeline to run on PR & push to main
 name: Lint, Test & Build
-description: Lint, Test & Build pipeline to run on PR & push to main
 
 concurrency:
   cancel-in-progress: false
@@ -18,7 +18,6 @@ permissions:
 jobs:
   lint-test-build:
     name: Lint, Test & Build
-    cancel-timeout-minutes: 2
     concurrency:
       group: ${{ github.workflow }}-${{ github.event }}-${{ github.ref }}-${{ github.job }}-${{ matrix.python-version }}
       cancel-in-progress: true

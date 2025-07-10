@@ -1,5 +1,5 @@
+# Workflow to release new versions to PyPI
 name: Release
-description: Release to PyPI
 
 concurrency:
   cancel-in-progress: false
@@ -13,7 +13,6 @@ on:
 jobs:
   release:
     name: Release
-    cancel-timeout-minutes: 2
     concurrency:
       group: ${{ github.workflow }}-${{ github.event }}-${{ github.ref }}-${{ github.job }}-${{ matrix.python-version }}
       cancel-in-progress: true
