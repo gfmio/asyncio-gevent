@@ -23,7 +23,9 @@ def get_distribution_files() -> List[Path]:
     if not dist_dir.exists():
         raise FileNotFoundError("dist/ directory does not exist. Run 'task build' first.")
 
-    if files := list(dist_dir.glob("*.tar.gz")) + list(dist_dir.glob("*.whl")):
+    files = list(dist_dir.glob("*.tar.gz")) + list(dist_dir.glob("*.whl")):
+
+    if files:
         return files
     else:
         raise FileNotFoundError("No distribution files found in dist/. Run 'task build' first.")
@@ -37,7 +39,9 @@ def get_source_files(package_name: str) -> Set[str]:
     if not package_dir.exists():
         raise FileNotFoundError(f"❌ {package_name} package directory does not exist.")
 
-    if files := {f.relative_to(base_dir).as_posix() for f in package_dir.glob("**/*.py") if f.is_file()}:
+    files = {f.relative_to(base_dir).as_posix() for f in package_dir.glob("**/*.py") if f.is_file()}:
+
+    if files:
         return files
     else:
         raise FileNotFoundError(f"❌ {package_name} package directory is empty or does not exist.")
