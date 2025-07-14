@@ -100,7 +100,7 @@ def verify_package_contents(
 
         unprefixed_package_files = {f[len(path_prefix) :] for f in package_files}
 
-        missing_files: set[str] = set()
+        missing_files = set()
         unexpected_files: set[str] = set()
 
         if unprefixed_package_files != source_files:
