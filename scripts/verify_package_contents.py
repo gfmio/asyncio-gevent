@@ -40,7 +40,7 @@ def get_source_files(package_name: str) -> Set[str]:
         print(f"❌ {package_name} package directory does not exist.")
         sys.exit(1)
 
-    return {f.relative_to(".").as_posix() for f in package_dir.glob("**/*.py") if f.is_file()}
+    return {f.relative_to(base_dir).as_posix() for f in package_dir.glob("**/*.py") if f.is_file()}
 
 
 def extract_file_list(dist_file: Path) -> Set[str]:
