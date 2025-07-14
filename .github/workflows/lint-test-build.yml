@@ -71,3 +71,7 @@ jobs:
       - name: build
         run: |
           task build
+      # Verify package contents
+      - name: Verify package contents
+        run: |
+          python scripts/verify_package_contents.py
