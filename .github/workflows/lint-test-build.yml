@@ -67,6 +67,10 @@ jobs:
       - name: Typecheck
         run: |
           task typecheck
+      # Clean
+      - name: clean
+        run: |
+          task clean
       # Build
       - name: build
         run: |

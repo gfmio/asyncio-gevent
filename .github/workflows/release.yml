@@ -55,6 +55,10 @@ jobs:
       # Install dependencies
       - name: Install dependencies
         run: task install
+      # Clean
+      - name: clean
+        run: |
+          task clean
       # Build
       - name: build
         run: |
