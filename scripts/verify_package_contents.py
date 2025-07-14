@@ -8,7 +8,6 @@ import sys
 import tarfile
 import zipfile
 from pathlib import Path
-from typing import List, Set
 
 PACKAGE_NAME = "asyncio_gevent"
 ROOT_INIT_PY = f"{PACKAGE_NAME}/__init__.py"
@@ -17,7 +16,7 @@ OTHER_REQUIRED_FILES = {
 }
 
 
-def get_distribution_files() -> List[Path]:
+def get_distribution_files() -> list[Path]:
     """Get all distribution files in the dist/ directory."""
     dist_dir = Path("dist")
     if not dist_dir.exists():
@@ -32,7 +31,7 @@ def get_distribution_files() -> List[Path]:
     return files
 
 
-def get_source_files(package_name: str) -> Set[str]:
+def get_source_files(package_name: str) -> set[str]:
     """Get the list of python files in the package."""
     package_dir = Path(package_name)
 
@@ -43,7 +42,7 @@ def get_source_files(package_name: str) -> Set[str]:
     return {f.relative_to(".").as_posix() for f in package_dir.glob("**/*.py") if f.is_file()}
 
 
-def extract_file_list(dist_file: Path) -> Set[str]:
+def extract_file_list(dist_file: Path) -> set[str]:
     """Extract the list of files from a distribution archive."""
     if dist_file.name.endswith(".tar.gz"):
         # Source distribution (.tar.gz)
@@ -57,7 +56,7 @@ def extract_file_list(dist_file: Path) -> Set[str]:
         raise ValueError(f"Unsupported distribution format for {dist_file}. Expected .tar.gz or .whl")
 
 
-def determine_path_prefix(file_list: Set[str], root_init_py: str) -> str:
+def determine_path_prefix(file_list: set[str], root_init_py: str) -> str:
     """Determine the path prefix for the package."""
     matching_files = [f for f in file_list if f.endswith(root_init_py)]
 
