@@ -9,7 +9,7 @@ class AsyncWatcher(Watcher):
         self._handle = None
 
     def _start(self, **kwargs):
-        # return True
+        # Async watchers are always active once started
         return None
 
     def _stop(self):

@@ -66,3 +66,7 @@ class Watcher(RefMixin, metaclass=abc.ABCMeta):
             raise
         except:  # noqa: E722
             self.loop.handle_error(self, *sys.exc_info())
+
+    def close(self):
+        """Close the watcher and clean up resources."""
+        self.stop()

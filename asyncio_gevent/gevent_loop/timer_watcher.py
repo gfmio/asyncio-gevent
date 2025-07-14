@@ -10,9 +10,12 @@ class TimerWatcher(Watcher):
         self._handle = None
 
     def _start(self, update=True, **kwargs):
-        self._handle = self.loop.aio.call_later(self.after, self._invoke)
-        # return True
-        return None
+        try:
+            self._handle = self.loop.aio.call_later(self.after, self._invoke)
+            return None
+        except Exception as e:
+            print(f"Error starting TimerWatcher for after {self.after}: {e}")
+            raise e
 
     def _stop(self):
         if self._handle is not None:
@@ -21,6 +24,10 @@ class TimerWatcher(Watcher):
     def _invoke(self):
         self.active = False
         super()._invoke()
+
+    def close(self):
+        """Close the timer and clean up resources."""
+        self.stop()
 
     def __enter__(self):
         self._start()

@@ -1,8 +1,14 @@
+from __future__ import annotations
+
 import asyncio
 from typing import Callable
 from typing import Optional
 from typing import Coroutine
 from typing import Union
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    import gevent
 
 import gevent.event
 
@@ -15,7 +21,7 @@ def future_to_greenlet(
     autostart_future: bool = True,
     autocancel_future: bool = True,
     autokill_greenlet: bool = True,
-) -> gevent.Greenlet:
+) -> "gevent.Greenlet":
     """
     Wrap a future (or coroutine object) in a greenlet.
 

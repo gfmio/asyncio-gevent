@@ -1,3 +1,4 @@
+import asyncio
 import sys
 import time
 from asyncio import AbstractEventLoop
@@ -39,7 +40,7 @@ class GeventLoop:
         self.fork_watchers = set()
         self._ref_count = 0
         self._stop_handle = None
-        self.aio.set_exception_handler(self._handle_aio_error)
+        self._initialized = False
 
     def run(self, nowait=False, once=False):
         """
@@ -50,9 +51,17 @@ class GeventLoop:
         this to control how the event loop runs (for example, to integrate
         it with another event loop).
         """
-        if self.aio.is_running:
+        aio = self.aio
+        if aio.is_running():
             return
-        self.aio.run_forever()
+        if once:
+            aio.run_until_complete(asyncio.sleep(0))
+        elif nowait:
+            # Run one iteration without blocking
+            aio.call_soon(aio.stop)
+            aio.run_forever()
+        else:
+            aio.run_forever()
 
     def now(self):
         """
@@ -114,7 +123,8 @@ class GeventLoop:
            queued to run. Closing the FD should be deferred until the next
            run of the eventloop with a callback.
         """
-        pass
+        # For asyncio backend, we don't need special handling
+        return False
 
     def timer(self, after, repeat=0.0, ref=True, priority=None):
         """
@@ -137,7 +147,10 @@ class GeventLoop:
         """
         Create and return a watcher that fires when the event loop is idle.
         """
-        pass
+        # Idle watchers are not directly supported by asyncio
+        # Return a minimal implementation that uses call_soon
+        from .async_watcher import AsyncWatcher
+        return AsyncWatcher(self, ref=ref)
 
     def prepare(self, ref=True, priority=None):
         """
@@ -146,14 +159,20 @@ class GeventLoop:
 
         .. caution:: This method is not supported by libuv.
         """
-        pass
+        # Prepare watchers are not directly supported by asyncio
+        # Return a minimal implementation
+        from .async_watcher import AsyncWatcher
+        return AsyncWatcher(self, ref=ref)
 
     def check(self, ref=True, priority=None):
         """
         Create and return a watcher that fires after the event loop
         polls for IO.
         """
-        pass
+        # Check watchers are not directly supported by asyncio
+        # Return a minimal implementation
+        from .async_watcher import AsyncWatcher
+        return AsyncWatcher(self, ref=ref)
 
     def fork(self, ref=True, priority=None):
         """
@@ -195,6 +214,10 @@ class GeventLoop:
         If the operating system doesn't support event notifications
         from the filesystem, poll for changes every *interval* seconds.
         """
+        # Stat watchers are not directly supported by asyncio
+        # This would require a complex implementation with filesystem monitoring
+        # For now, return None to indicate it's not supported
+        raise NotImplementedError("stat watchers are not yet implemented for asyncio backend")
 
     def run_callback(self, func, *args):
         """
@@ -272,6 +295,9 @@ class GeventLoop:
     @property
     def aio(self) -> AbstractEventLoop:
         aio = self._get_or_create_aio()
+        if not self._initialized:
+            aio.set_exception_handler(self._handle_aio_error)
+            self._initialized = True
         return aio
 
     def _get_or_create_aio(self):

@@ -1,11 +1,17 @@
+from __future__ import annotations
+
 import asyncio
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    import gevent
 
 import gevent
 
 __all__ = ["greenlet_to_future"]
 
 
-def _dead_greenlet_to_future(greenlet: gevent.Greenlet, future: asyncio.Future, autocancel_future: bool) -> None:
+def _dead_greenlet_to_future(greenlet: "gevent.Greenlet", future: asyncio.Future, autocancel_future: bool) -> None:
     try:
         result = greenlet.get(block=False)
         if autocancel_future and isinstance(result, gevent.GreenletExit):
@@ -17,7 +23,7 @@ def _dead_greenlet_to_future(greenlet: gevent.Greenlet, future: asyncio.Future, 
 
 
 async def _await_greenlet(
-    greenlet: gevent.Greenlet,
+    greenlet: "gevent.Greenlet",
     autocancel_future: bool,
     autostart_greenlet: bool,
     autokill_greenlet: bool,
@@ -52,7 +58,7 @@ async def _await_greenlet(
 
 
 def greenlet_to_future(
-    greenlet: gevent.Greenlet,
+    greenlet: "gevent.Greenlet",
     autocancel_future: bool = True,
     autostart_greenlet: bool = True,
     autokill_greenlet: bool = True,
