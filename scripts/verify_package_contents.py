@@ -71,9 +71,7 @@ def determine_path_prefix(file_list: Set[str], root_init_py: str) -> str:
     # Sort by the number of slashes to find the root package directory
     files.sort(key=lambda f: f.count("/"))
 
-    prefix = files[0][: -len(root_init_py)]
-
-    return prefix
+    return files[0][: -len(root_init_py)]
 
 
 def verify_package_contents(dist_file: Path) -> bool:
