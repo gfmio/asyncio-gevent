@@ -105,9 +105,9 @@ def test_determine_path_prefix_missing():
         vpc.determine_path_prefix(files, "asyncio_gevent/__init__.py")
 
 
-def make_dist_archive(tmp_path, files, kind="tar"):
-    dist_path = tmp_path / ("dist.tar.gz" if kind == "tar" else "dist.whl")
-    if kind == "tar":
+def make_dist_archive(tmp_path, files, archive_format="tar"):
+    dist_path = tmp_path / ("dist.tar.gz" if archive_format == "tar" else "dist.whl")
+    if archive_format == "tar":
         with tarfile.open(dist_path, "w:gz") as tar:
             for name, content in files.items():
                 f = tmp_path / name
