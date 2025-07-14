@@ -59,15 +59,15 @@ def extract_file_list(dist_file: Path) -> Set[str]:
 
 def determine_path_prefix(file_list: Set[str], root_init_py: str) -> str:
     """Determine the path prefix for the package."""
-    files = [f for f in file_list if f.endswith(root_init_py)]
+    matching_files = [f for f in file_list if f.endswith(root_init_py)]
 
-    if not files:
+    if not matching_files:
         raise ValueError(f"No {root_init_py} found in the package")
 
     # Sort by the number of slashes to find the root package directory
-    files.sort(key=lambda f: f.count("/"))
+    matching_files.sort(key=lambda f: f.count("/"))
 
-    return files[0][: -len(root_init_py)]
+    return matching_files[0][: -len(root_init_py)]
 
 
 def verify_package_contents(dist_file: Path, package_name: str, root_init_py: str) -> bool:
