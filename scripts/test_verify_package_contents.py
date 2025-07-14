@@ -123,7 +123,7 @@ def test_verify_package_contents_success(tmp_path, kind, monkeypatch):
         "foo-1.0/NOTICE": "notice",
     }
     dist_path = make_dist_archive(tmp_path, files, kind)
-    assert vpc.verify_package_contents(dist_path, vpc.PACKAGE_NAME, vpc.ROOT_INIT_PY)
+    assert vpc.verify_package_contents(dist_path, vpc.PACKAGE_NAME, vpc.ROOT_INIT_PY, vpc.OTHER_REQUIRED_FILES)
 
 
 @pytest.mark.parametrize("kind", ["tar", "whl"])
@@ -139,7 +139,7 @@ def test_verify_package_contents_missing_file(tmp_path, kind, monkeypatch):
         "foo-1.0/NOTICE": "notice",
     }
     dist_path = make_dist_archive(tmp_path, files, kind)
-    assert not vpc.verify_package_contents(dist_path, vpc.PACKAGE_NAME, vpc.ROOT_INIT_PY)
+    assert not vpc.verify_package_contents(dist_path, vpc.PACKAGE_NAME, vpc.ROOT_INIT_PY, vpc.OTHER_REQUIRED_FILES)
 
 
 @pytest.mark.parametrize("kind", ["tar", "whl"])
@@ -157,4 +157,18 @@ def test_verify_package_contents_unexpected_file(tmp_path, kind, monkeypatch):
         "foo-1.0/NOTICE": "notice",
     }
     dist_path = make_dist_archive(tmp_path, files, kind)
-    assert not vpc.verify_package_contents(dist_path, vpc.PACKAGE_NAME, vpc.ROOT_INIT_PY)
+    assert not vpc.verify_package_contents(dist_path, vpc.PACKAGE_NAME, vpc.ROOT_INIT_PY, vpc.OTHER_REQUIRED_FILES)
+
+
+@pytest.mark.parametrize("kind", ["tar", "whl"])
+def test_verify_other_missing_file(tmp_path, kind, monkeypatch):
+    pkg = tmp_path / vpc.PACKAGE_NAME
+    pkg.mkdir()
+    (pkg / "__init__.py").write_text("# init")
+    (pkg / "mod.py").write_text("# mod")
+    monkeypatch.chdir(tmp_path)
+    files = {
+        f"foo-1.0/{vpc.PACKAGE_NAME}/__init__.py": "# init",
+    }
+    dist_path = make_dist_archive(tmp_path, files, kind)
+    assert not vpc.verify_package_contents(dist_path, vpc.PACKAGE_NAME, vpc.ROOT_INIT_PY, vpc.OTHER_REQUIRED_FILES)
