@@ -41,6 +41,20 @@ def test_get_distribution_files_found(monkeypatch, tmp_path):
     assert any(str(f).endswith(".whl") for f in files)
 
 
+def test_get_distribution_files_ignores_other_extensions(monkeypatch, tmp_path):
+    dist = tmp_path / "dist"
+    dist.mkdir()
+    (dist / "foo.tar.gz").write_text("x")
+    (dist / "bar.whl").write_text("y")
+    (dist / "baz.txt").write_text("z")
+    (dist / "README.md").write_text("readme")
+    monkeypatch.chdir(tmp_path)
+    files = vpc.get_distribution_files()
+    # Only .tar.gz and .whl should be included
+    assert len(files) == 2
+    assert all(str(f).endswith((".tar.gz", ".whl")) for f in files)
+
+
 def test_get_source_files_missing(monkeypatch, tmp_path):
     monkeypatch.chdir(tmp_path)
     with pytest.raises(SystemExit):
