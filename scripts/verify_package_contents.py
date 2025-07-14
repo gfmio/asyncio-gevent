@@ -35,6 +35,7 @@ def get_distribution_files() -> List[Path]:
 def get_source_files(package_name: str) -> Set[str]:
     """Get the list of python files in the package."""
     package_dir = Path(package_name)
+    base_dir = package_dir.parent
 
     if not package_dir.exists():
         print(f"❌ {package_name} package directory does not exist.")
