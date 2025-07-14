@@ -57,10 +57,6 @@ def extract_file_list(dist_file: Path) -> Set[str]:
         raise ValueError(f"Unsupported file type: {dist_file}")
 
 
-def sort_key_by_slash_count(s: str) -> int:
-    return s.count("/")
-
-
 def determine_path_prefix(file_list: Set[str], root_init_py: str) -> str:
     """Determine the path prefix for the package."""
     files = [f for f in file_list if f.endswith(root_init_py)]
@@ -74,35 +70,33 @@ def determine_path_prefix(file_list: Set[str], root_init_py: str) -> str:
     return files[0][: -len(root_init_py)]
 
 
-def verify_package_contents(dist_file: Path) -> bool:
+def verify_package_contents(dist_file: Path, package_name: str, root_init_py: str) -> bool:
     """Verify that the asyncio_gevent package is properly included."""
     print(f"🔍 Checking {dist_file.name}...")
 
-    source_files = get_source_files(PACKAGE_NAME)
+    source_files = get_source_files(package_name)
 
     if not source_files:
-        print("❌ asyncio_gevent package directory is empty or does not exist.")
+        print(f"❌ {package_name} package directory is empty or does not exist.")
         return False
 
     try:
         file_list = extract_file_list(dist_file)
 
         # Identify the path prefix for the asyncio_gevent package
-        path_prefix = determine_path_prefix(file_list, ROOT_INIT_PY)
+        path_prefix = determine_path_prefix(file_list, root_init_py)
 
         # Find all package files in the asyncio_gevent package
 
-        package_files = set(
-            f for f in file_list if f.startswith(path_prefix + PACKAGE_NAME + "/") and f.endswith(".py")
-        )
+        package_files = {f for f in file_list if f.startswith(path_prefix + package_name + "/") and f.endswith(".py")}
 
         if not package_files:
-            print(f"❌ No {PACKAGE_NAME} package files found in {dist_file.name}")
+            print(f"❌ No {package_name} package files found in {dist_file.name}")
             return False
 
         # Check if the package files match the source files exactly
 
-        unprefixed_package_files = set(f[len(path_prefix) :] for f in package_files)
+        unprefixed_package_files = {f[len(path_prefix) :] for f in package_files}
 
         missing_files: set[str] = set()
         unexpected_files: set[str] = set()
@@ -141,7 +135,7 @@ def main():
     all_passed = True
 
     for dist_file in dist_files:
-        if not verify_package_contents(dist_file):
+        if not verify_package_contents(dist_file, PACKAGE_NAME, ROOT_INIT_PY):
             all_passed = False
 
     if all_passed:
