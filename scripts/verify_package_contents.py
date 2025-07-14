@@ -45,7 +45,7 @@ def get_source_files(package_name: str) -> Set[str]:
 
 def extract_file_list(dist_file: Path) -> Set[str]:
     """Extract the list of files from a distribution archive."""
-    if dist_file.suffix == ".gz":
+    if dist_file.name.endswith(".tar.gz"):
         # Source distribution (.tar.gz)
         with tarfile.open(dist_file, "r:gz") as tar:
             return set(tar.getnames())
