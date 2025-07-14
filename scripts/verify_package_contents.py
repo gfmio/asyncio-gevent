@@ -54,7 +54,7 @@ def extract_file_list(dist_file: Path) -> Set[str]:
         with zipfile.ZipFile(dist_file, "r") as zip_file:
             return set(zip_file.namelist())
     else:
-        raise ValueError(f"Unsupported file type: {dist_file}")
+        raise ValueError(f"Unsupported distribution format for {dist_file}. Expected .tar.gz or .whl")
 
 
 def determine_path_prefix(file_list: Set[str], root_init_py: str) -> str:
