@@ -69,7 +69,9 @@ def determine_path_prefix(file_list: set[str], root_init_py: str) -> str:
     return matching_files[0][: -len(root_init_py)]
 
 
-def verify_package_contents(dist_file: Path, package_name: str, root_init_py: str) -> bool:
+def verify_package_contents(
+    dist_file: Path, package_name: str, root_init_py: str, other_required_files: set[str]
+) -> bool:
     """Verify that the asyncio_gevent package is properly included."""
     print(f"🔍 Checking {dist_file.name}...")
 
@@ -106,7 +108,7 @@ def verify_package_contents(dist_file: Path, package_name: str, root_init_py: st
 
         # Check for other required files
 
-        for required_file in OTHER_REQUIRED_FILES:
+        for required_file in other_required_files:
             if path_prefix + required_file not in file_list:
                 missing_files.add(required_file)
 
@@ -134,7 +136,7 @@ def main():
     all_passed = True
 
     for dist_file in dist_files:
-        if not verify_package_contents(dist_file, PACKAGE_NAME, ROOT_INIT_PY):
+        if not verify_package_contents(dist_file, PACKAGE_NAME, ROOT_INIT_PY, OTHER_REQUIRED_FILES):
             all_passed = False
 
     if all_passed:
