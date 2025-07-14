@@ -49,6 +49,10 @@ tasks:
     cmd: uv build
     desc: "Build the project"
 
+  clean:
+    cmd: rm -rf dist/ build/
+    desc: "Clean build artifacts"
+
   test:
     cmds:
       - task: pytest
