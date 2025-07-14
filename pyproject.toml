@@ -74,7 +74,7 @@ dev-dependencies = [
 ]
 
 [tool.pdm.build]
-includes = ["asyncio_gevent", "NOTICE"]
+includes = ["NOTICE", "asyncio_gevent"]
 
 [build-system]
 requires = ["pdm-backend"]
