@@ -125,7 +125,7 @@ def verify_package_contents(
         print(f"✅ {dist_file.name} contains asyncio_gevent package ({len(package_files)} files)")
         return True
 
-    except (OSError, tarfile.TarError, zipfile.BadZipFile) as e:
+    except (OSError, tarfile.TarError, zipfile.BadZipFile, ValueError) as e:
         print(f"❌ Error checking {dist_file.name}: {e}")
         return False
     except Exception as e:
