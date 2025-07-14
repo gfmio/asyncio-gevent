@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Script to verify that the asyncio_gevent package directory is included
-in both source and wheel distributions.
+Script to verify that the asyncio_gevent package directory and any other
+required files are included in both source and wheel distributions.
 """
 
 import sys
