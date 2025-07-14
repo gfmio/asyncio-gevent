@@ -65,7 +65,7 @@ def determine_path_prefix(file_list: Set[str], root_init_py: str) -> str:
         raise ValueError(f"No {root_init_py} found in the package")
 
     # Sort by the number of slashes to find the root package directory
-    matching_files.sort(key=lambda f: f.count("/"))
+    matching_files.sort(key=lambda f: len(Path(f).parts))
 
     return matching_files[0][: -len(root_init_py)]
 
