@@ -23,7 +23,7 @@ def get_distribution_files() -> List[Path]:
     if not dist_dir.exists():
         raise FileNotFoundError("dist/ directory does not exist. Run 'task build' first.")
 
-    files = list(dist_dir.glob("*.tar.gz")) + list(dist_dir.glob("*.whl")):
+    files = list(dist_dir.glob("*.tar.gz")) + list(dist_dir.glob("*.whl"))
 
     if files:
         return files
@@ -39,7 +39,7 @@ def get_source_files(package_name: str) -> Set[str]:
     if not package_dir.exists():
         raise FileNotFoundError(f"❌ {package_name} package directory does not exist.")
 
-    files = {f.relative_to(base_dir).as_posix() for f in package_dir.glob("**/*.py") if f.is_file()}:
+    files = {f.relative_to(base_dir).as_posix() for f in package_dir.glob("**/*.py") if f.is_file()}
 
     if files:
         return files
@@ -133,7 +133,9 @@ def verify_package_contents(
 
 def find_package_files(dist_file: Path, package_name: str, file_list: Set[str], path_prefix: str) -> Set[str]:
     """Find all Python files in the package."""
-    if package_files := {f for f in file_list if f.startswith(path_prefix + package_name + "/") and f.endswith(".py")}:
+    package_files = {f for f in file_list if f.startswith(path_prefix + package_name + "/") and f.endswith(".py")}
+
+    if package_files:
         return package_files
     else:
         raise FileNotFoundError(f"No {package_name} package files found in {dist_file.name}")
