@@ -129,7 +129,7 @@ def verify_package_contents(
         return False
     except Exception as e:
         print(f"❌ Unexpected error checking {dist_file.name}: {e}")
-        return False
+        raise
 
 
 def main():
