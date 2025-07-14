@@ -17,7 +17,7 @@ def tmp_package(tmp_path):
 
 def test_get_distribution_files_no_dist(monkeypatch, tmp_path):
     monkeypatch.chdir(tmp_path)
-    with pytest.raises(SystemExit):
+    with pytest.raises(FileNotFoundError):
         vpc.get_distribution_files()
 
 
@@ -25,7 +25,7 @@ def test_get_distribution_files_empty(monkeypatch, tmp_path):
     dist = tmp_path / "dist"
     dist.mkdir()
     monkeypatch.chdir(tmp_path)
-    with pytest.raises(SystemExit):
+    with pytest.raises(FileNotFoundError):
         vpc.get_distribution_files()
 
 
@@ -57,7 +57,7 @@ def test_get_distribution_files_ignores_other_extensions(monkeypatch, tmp_path):
 
 def test_get_source_files_missing(monkeypatch, tmp_path):
     monkeypatch.chdir(tmp_path)
-    with pytest.raises(SystemExit):
+    with pytest.raises(FileNotFoundError):
         vpc.get_source_files("not_a_package")
 
 
@@ -105,24 +105,24 @@ def test_determine_path_prefix_missing():
         vpc.determine_path_prefix(files, "asyncio_gevent/__init__.py")
 
 
-def make_dist_archive(tmp_path, files, archive_format="tar"):
+def make_dist_archive(tmp_path, file_contents, archive_format="tar"):
     dist_path = tmp_path / ("dist.tar.gz" if archive_format == "tar" else "dist.whl")
     if archive_format == "tar":
         with tarfile.open(dist_path, "w:gz") as tar:
-            for name, content in files.items():
+            for name, content in file_contents.items():
                 f = tmp_path / name
                 f.parent.mkdir(parents=True, exist_ok=True)
                 f.write_text(content)
                 tar.add(f, arcname=name)
     else:
         with zipfile.ZipFile(dist_path, "w") as z:
-            for name, content in files.items():
+            for name, content in file_contents.items():
                 z.writestr(name, content)
     return dist_path
 
 
-@pytest.mark.parametrize("kind", ["tar", "whl"])
-def test_verify_package_contents_success(tmp_path, kind, monkeypatch):
+@pytest.mark.parametrize("archive_format", ["tar", "whl"])
+def test_verify_package_contents_success(tmp_path, archive_format, monkeypatch):
     # Simulate source files
     pkg = tmp_path / vpc.PACKAGE_NAME
     pkg.mkdir()
@@ -131,58 +131,70 @@ def test_verify_package_contents_success(tmp_path, kind, monkeypatch):
     (tmp_path / "NOTICE").write_text("notice")
     monkeypatch.chdir(tmp_path)
     # Simulate dist archive
-    files = {
+    file_contents = {
         f"foo-1.0/{vpc.PACKAGE_NAME}/__init__.py": "# init",
         f"foo-1.0/{vpc.PACKAGE_NAME}/mod.py": "# mod",
         "foo-1.0/NOTICE": "notice",
     }
-    dist_path = make_dist_archive(tmp_path, files, kind)
-    assert vpc.verify_package_contents(dist_path, vpc.PACKAGE_NAME, vpc.ROOT_INIT_PY, vpc.OTHER_REQUIRED_FILES)
+    dist_path = make_dist_archive(tmp_path, file_contents, archive_format)
+    source_files = vpc.get_source_files(vpc.PACKAGE_NAME)
+    assert vpc.verify_package_contents(
+        dist_path, source_files, vpc.PACKAGE_NAME, vpc.ROOT_INIT_PY, vpc.OTHER_REQUIRED_FILES
+    )
 
 
-@pytest.mark.parametrize("kind", ["tar", "whl"])
-def test_verify_package_contents_missing_file(tmp_path, kind, monkeypatch):
+@pytest.mark.parametrize("archive_format", ["tar", "whl"])
+def test_verify_package_contents_missing_file(tmp_path, archive_format, monkeypatch):
     pkg = tmp_path / vpc.PACKAGE_NAME
     pkg.mkdir()
     (pkg / "__init__.py").write_text("# init")
     (pkg / "mod.py").write_text("# mod")
     (tmp_path / "NOTICE").write_text("notice")
     monkeypatch.chdir(tmp_path)
-    files = {
+    file_contents = {
         f"foo-1.0/{vpc.PACKAGE_NAME}/__init__.py": "# init",
         "foo-1.0/NOTICE": "notice",
     }
-    dist_path = make_dist_archive(tmp_path, files, kind)
-    assert not vpc.verify_package_contents(dist_path, vpc.PACKAGE_NAME, vpc.ROOT_INIT_PY, vpc.OTHER_REQUIRED_FILES)
+    dist_path = make_dist_archive(tmp_path, file_contents, archive_format)
+    source_files = vpc.get_source_files(vpc.PACKAGE_NAME)
+    assert not vpc.verify_package_contents(
+        dist_path, source_files, vpc.PACKAGE_NAME, vpc.ROOT_INIT_PY, vpc.OTHER_REQUIRED_FILES
+    )
 
 
-@pytest.mark.parametrize("kind", ["tar", "whl"])
-def test_verify_package_contents_unexpected_file(tmp_path, kind, monkeypatch):
+@pytest.mark.parametrize("archive_format", ["tar", "whl"])
+def test_verify_package_contents_unexpected_file(tmp_path, archive_format, monkeypatch):
     pkg = tmp_path / vpc.PACKAGE_NAME
     pkg.mkdir()
     (pkg / "__init__.py").write_text("# init")
     (pkg / "mod.py").write_text("# mod")
     (tmp_path / "NOTICE").write_text("notice")
     monkeypatch.chdir(tmp_path)
-    files = {
+    file_contents = {
         f"foo-1.0/{vpc.PACKAGE_NAME}/__init__.py": "# init",
         f"foo-1.0/{vpc.PACKAGE_NAME}/mod.py": "# mod",
         f"foo-1.0/{vpc.PACKAGE_NAME}/extra.py": "# extra",
         "foo-1.0/NOTICE": "notice",
     }
-    dist_path = make_dist_archive(tmp_path, files, kind)
-    assert not vpc.verify_package_contents(dist_path, vpc.PACKAGE_NAME, vpc.ROOT_INIT_PY, vpc.OTHER_REQUIRED_FILES)
+    dist_path = make_dist_archive(tmp_path, file_contents, archive_format)
+    source_files = vpc.get_source_files(vpc.PACKAGE_NAME)
+    assert not vpc.verify_package_contents(
+        dist_path, source_files, vpc.PACKAGE_NAME, vpc.ROOT_INIT_PY, vpc.OTHER_REQUIRED_FILES
+    )
 
 
-@pytest.mark.parametrize("kind", ["tar", "whl"])
-def test_verify_other_missing_file(tmp_path, kind, monkeypatch):
+@pytest.mark.parametrize("archive_format", ["tar", "whl"])
+def test_verify_other_missing_file(tmp_path, archive_format, monkeypatch):
     pkg = tmp_path / vpc.PACKAGE_NAME
     pkg.mkdir()
     (pkg / "__init__.py").write_text("# init")
     (pkg / "mod.py").write_text("# mod")
     monkeypatch.chdir(tmp_path)
-    files = {
+    file_contents = {
         f"foo-1.0/{vpc.PACKAGE_NAME}/__init__.py": "# init",
     }
-    dist_path = make_dist_archive(tmp_path, files, kind)
-    assert not vpc.verify_package_contents(dist_path, vpc.PACKAGE_NAME, vpc.ROOT_INIT_PY, vpc.OTHER_REQUIRED_FILES)
+    dist_path = make_dist_archive(tmp_path, file_contents, archive_format)
+    source_files = vpc.get_source_files(vpc.PACKAGE_NAME)
+    assert not vpc.verify_package_contents(
+        dist_path, source_files, vpc.PACKAGE_NAME, vpc.ROOT_INIT_PY, vpc.OTHER_REQUIRED_FILES
+    )

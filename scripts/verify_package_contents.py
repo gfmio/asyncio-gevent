@@ -21,13 +21,11 @@ def get_distribution_files() -> List[Path]:
     """Get all distribution files in the dist/ directory."""
     dist_dir = Path("dist")
     if not dist_dir.exists():
-        print("❌ dist/ directory does not exist. Run 'task build' first.")
-        sys.exit(1)
+        raise FileNotFoundError("dist/ directory does not exist. Run 'task build' first.")
 
     files = list(dist_dir.glob("*.tar.gz")) + list(dist_dir.glob("*.whl"))
     if not files:
-        print("❌ No distribution files found in dist/. Run 'task build' first.")
-        sys.exit(1)
+        raise FileNotFoundError("No distribution files found in dist/. Run 'task build' first.")
 
     return files
 
@@ -38,10 +36,14 @@ def get_source_files(package_name: str) -> Set[str]:
     base_dir = package_dir.parent
 
     if not package_dir.exists():
-        print(f"❌ {package_name} package directory does not exist.")
-        sys.exit(1)
+        raise FileNotFoundError(f"❌ {package_name} package directory does not exist.")
 
-    return {f.relative_to(base_dir).as_posix() for f in package_dir.glob("**/*.py") if f.is_file()}
+    files = {f.relative_to(base_dir).as_posix() for f in package_dir.glob("**/*.py") if f.is_file()}
+
+    if not files:
+        raise FileNotFoundError(f"❌ {package_name} package directory is empty or does not exist.")
+
+    return files
 
 
 def extract_file_list(dist_file: Path) -> Set[str]:
@@ -68,20 +70,15 @@ def determine_path_prefix(file_list: Set[str], root_init_py: str) -> str:
     # Sort by the number of slashes to find the root package directory
     matching_files.sort(key=lambda f: len(Path(f).parts))
 
-    return matching_files[0][: -len(root_init_py)]
+    # Remove the root_init_py suffix from the matched file path to get the path prefix
+    return matching_files[0][:-len(root_init_py)]
 
 
 def verify_package_contents(
-    dist_file: Path, package_name: str, root_init_py: str, other_required_files: Set[str]
+    dist_file: Path, source_files: Set[str], package_name: str, root_init_py: str, other_required_files: Set[str]
 ) -> bool:
     """Verify that the asyncio_gevent package is properly included."""
     print(f"🔍 Checking {dist_file.name}...")
-
-    source_files = get_source_files(package_name)
-
-    if not source_files:
-        print(f"❌ {package_name} package directory is empty or does not exist.")
-        return False
 
     try:
         file_list = extract_file_list(dist_file)
@@ -90,15 +87,12 @@ def verify_package_contents(
         path_prefix = determine_path_prefix(file_list, root_init_py)
 
         # Find all package files in the asyncio_gevent package
-
-        package_files = {f for f in file_list if f.startswith(path_prefix + package_name + "/") and f.endswith(".py")}
-
-        if not package_files:
-            print(f"❌ No {package_name} package files found in {dist_file.name}")
-            return False
+        package_files = find_package_files(dist_file, package_name, file_list, path_prefix)
 
         # Check if the package files match the source files exactly
 
+        # This strips the leading directory structure added by the distribution archive / path prefix from each file
+        # path so we can compare with the source file paths.
         unprefixed_package_files = {f[len(path_prefix):] for f in package_files}
 
         missing_files = set()
@@ -109,6 +103,9 @@ def verify_package_contents(
             unexpected_files = unprefixed_package_files - source_files
 
         # Check for other required files
+
+        # NOTE: This assumes all required files (e.g., NOTICE) are located at the same prefix as the package directory
+        # within the distribution archive. If required files are at the root, adjust this logic accordingly.
 
         for required_file in other_required_files:
             if path_prefix + required_file not in file_list:
@@ -133,22 +130,40 @@ def verify_package_contents(
         raise
 
 
+def find_package_files(dist_file: Path, package_name: str, file_list: Set[str], path_prefix: str) -> Set[str]:
+    """Find all Python files in the package."""
+    package_files = {f for f in file_list if f.startswith(path_prefix + package_name + "/") and f.endswith(".py")}
+
+    if not package_files:
+        raise FileNotFoundError(f"No {package_name} package files found in {dist_file.name}")
+
+    return package_files
+
+
 def main():
     """Main verification function."""
     print("🔍 Verifying package contents in distributions...")
 
-    dist_files = get_distribution_files()
-    all_passed = True
+    try:
+        dist_files = get_distribution_files()
+        source_files = get_source_files(PACKAGE_NAME)
+        all_passed = True
 
-    for dist_file in dist_files:
-        if not verify_package_contents(dist_file, PACKAGE_NAME, ROOT_INIT_PY, OTHER_REQUIRED_FILES):
-            all_passed = False
+        for dist_file in dist_files:
+            if not verify_package_contents(dist_file, source_files, PACKAGE_NAME, ROOT_INIT_PY, OTHER_REQUIRED_FILES):
+                all_passed = False
 
-    if all_passed:
-        print("\n✅ All distributions contain the asyncio_gevent package!")
-        sys.exit(0)
-    else:
-        print("\n❌ Some distributions are missing the asyncio_gevent package!")
+        if all_passed:
+            print(f"\n✅ All distributions contain the {PACKAGE_NAME} package and all required files!")
+            sys.exit(0)
+        else:
+            print(f"\n❌ Some distributions are missing the {PACKAGE_NAME} package or some of the required files!")
+            sys.exit(1)
+    except FileNotFoundError as e:
+        print(f"❌ {e}")
+        sys.exit(1)
+    except Exception as e:
+        print(f"❌ Unexpected error: {e}")
         sys.exit(1)
 
 
